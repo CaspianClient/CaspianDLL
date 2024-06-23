@@ -1,5 +1,6 @@
 #pragma once
 #include "../Hook.hpp"
+#include "../../../Events/Event.hpp"
 
 class MouseFeed : public Hook {
 public:

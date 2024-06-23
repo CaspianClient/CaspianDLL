@@ -4,6 +4,17 @@
 #include <wininet.h>
 #include "src/Init/Init.hpp"
 
+#include <winrt/windows.foundation.h>
+#include <winrt/windows.ui.h>
+#include <winrt/windows.ui.notifications.h>
+#include <winrt/windows.ui.notifications.management.h>
+#include <winrt/windows.ui.popups.h>
+#include <winrt/windows.data.xml.dom.h>
+
+using namespace winrt::Windows::UI::Notifications;
+using namespace winrt::Windows::UI::Popups;
+using namespace winrt::Windows::Data::Xml::Dom;
+
 DWORD WINAPI initialize(HMODULE instance) {
     if (GetConsoleWindow() == nullptr and true) {
         AllocConsole();
@@ -13,6 +24,12 @@ DWORD WINAPI initialize(HMODULE instance) {
     }
 
     Init::Initialize();
+
+    ToastNotification toastNotif = ToastNotification(ToastNotificationManager::GetTemplateContent(ToastTemplateType::ToastImageAndText02));
+	IXmlNodeList txtElmnt = toastNotif.Content().GetElementsByTagName(L"text");
+	txtElmnt.Item(0).InnerText(winrt::to_hstring("Caspian Client"));
+	txtElmnt.Item(1).InnerText(winrt::to_hstring("Caspian has been injected!"));
+	ToastNotificationManager::CreateToastNotifier().Show(toastNotif);
 
     while (!Init::isDisabled()) {
         Sleep(50);

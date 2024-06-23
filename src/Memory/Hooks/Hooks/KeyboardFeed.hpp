@@ -17,6 +17,7 @@ public:
 		event->state = state;
 		EventDispature.trigger(event);
 
-		return func_original(key, state);
+		if (!event->mCancel)
+			return func_original(key, state);
 	}
 };
