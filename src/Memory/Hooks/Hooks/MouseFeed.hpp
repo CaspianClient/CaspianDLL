@@ -12,6 +12,23 @@ public:
 	}
 
 	static void callback(void* MouseDevice, char button, char action, short mouse_x, short mouse_y, short relativeMouseX, short relativeMouseY, bool isScrolling) {
-		return func_original(MouseDevice, button, action, mouse_x, mouse_y, relativeMouseX, relativeMouseY, isScrolling);
+		bool mCancel = false;
+		if (button == MouseButton::Scroll) {
+			nes::event_holder<MouseScrollEvent> ScrollEvent;
+			ScrollEvent->ScrollUp = (MouseAction)action == MouseAction::SCROLL_UP;
+			EventDispature.trigger(ScrollEvent);
+			if (ScrollEvent->mCancel) mCancel = true;
+		}
+		nes::event_holder<MouseEvent> mouseEvent;
+		mouseEvent->action = (MouseAction)action;
+		mouseEvent->button = (MouseButton)button;
+		mouseEvent->mouseX = mouse_x;
+		mouseEvent->mouseY = mouse_y;
+
+		EventDispature.trigger(mouseEvent);
+		if (mouseEvent->mCancel) mCancel = true;
+
+		if (!mCancel)
+			return func_original(MouseDevice, button, action, mouse_x, mouse_y, relativeMouseX, relativeMouseY, isScrolling);
 	}
 };

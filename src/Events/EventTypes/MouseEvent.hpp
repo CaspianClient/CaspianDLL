@@ -16,3 +16,9 @@ public:
     short mouseY;
     bool mCancel = false;
 };
+
+class MouseScrollEvent {
+public:
+    bool ScrollUp;
+    bool mCancel;
+};
