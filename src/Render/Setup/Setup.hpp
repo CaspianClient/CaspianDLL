@@ -22,7 +22,7 @@ ID3D11Device* d3d11Device;
 ID3D12Device* d3d12Device;
 
 ID3D12DescriptorHeap* d3d12DescriptorHeapImGuiRender;
-ID3D12DescriptorHeap* d3d12DescriptorHeapBackBuffers;AA
+ID3D12DescriptorHeap* d3d12DescriptorHeapBackBuffers;
 ID3D12GraphicsCommandList* d3d12CommandList;
 ID3D12CommandQueue* d3d12CommandQueue;
 ID3D12CommandAllocator* allocator;
@@ -31,7 +31,21 @@ uint64_t buffersCounts;
 std::vector<FrameContext> frameContexts;
 ID3D12Device5* d3d12Device5;
 
+typedef void(__thiscall *CommandListdetour)(ID3D12CommandQueue* queue, UINT numCommandLists, const ID3D12CommandList** ppCommandLists);
+static CommandListdetour CommandList_original = nullptr;
 
+typedef void(__thiscall *Presentdetour)(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags);
+Presentdetour Present_original = nullptr;
+
+static void CommandList(ID3D12CommandQueue* queue, UINT numCommandLists, const ID3D12CommandList** ppCommandLists) {
+	if(!d3d12CommandQueue) d3d12CommandQueue = queue;
+
+	return CommandList_original(queue, numCommandLists, ppCommandLists);
+}
+
+static void Present(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
+	return Present_original(ppSwapChain, syncInterval, flags);
+}
 
 class SetupImGUI {
 public:
@@ -50,19 +64,3 @@ public:
 		}
 	}
 };
-
-typedef void(__thiscall *CommandListdetour)(ID3D12CommandQueue* queue, UINT numCommandLists, const ID3D12CommandList** ppCommandLists);
-CommandListdetour CommandList_original = nullptr;
-
-typedef void(__thiscall *Presentdetour)(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags);
-Presentdetour Present_original = nullptr;
-
-void CommandList(ID3D12CommandQueue* queue, UINT numCommandLists, const ID3D12CommandList** ppCommandLists) {
-	if(!d3d12CommandQueue) d3d12CommandQueue = queue;
-
-	return CommandList_original(queue, numCommandLists, ppCommandLists);
-}
-
-void Present(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
-	return Present_original(ppSwapChain, syncInterval, flags);
-}
