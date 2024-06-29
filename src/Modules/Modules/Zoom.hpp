@@ -2,6 +2,7 @@
 #include "../Module.hpp"
 #include "../../Events/Event.hpp"
 #include "../../Config/ConfigManager.hpp"
+#include "../../SDK/SDK.hpp"
 #include <functional>
 
 class Zoom : public Module {
@@ -28,13 +29,13 @@ public:
 	};
 
 	std::function<void(GetFOVevent&)> getFovEvent = [&](GetFOVevent& event) {
-		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom) {
+		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen") {
 			event.fov = fov;
 		}
 	};
 
 	std::function<void(MouseScrollEvent&)> mScrollEvent = [&](MouseScrollEvent& event) {
-		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom) {
+		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen") {
 			event.mCancel = true;
 			if (event.ScrollUp) {
 				if (fov <= 15)

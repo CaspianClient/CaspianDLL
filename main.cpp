@@ -25,6 +25,8 @@ DWORD WINAPI initialize(HMODULE instance) {
 
     Init::Initialize();
 
+    winrt::init_apartment();
+
     ToastNotification toastNotif = ToastNotification(ToastNotificationManager::GetTemplateContent(ToastTemplateType::ToastImageAndText02));
 	IXmlNodeList txtElmnt = toastNotif.Content().GetElementsByTagName(L"text");
 	txtElmnt.Item(0).InnerText(winrt::to_hstring("Caspian Client"));
