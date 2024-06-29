@@ -18,8 +18,6 @@ public:
 
 		SDK::CI = mcuirc->getclientInstance();
 		SDK::TopLayer = (a1->TopLayer() != "toast_screen" and a1->TopLayer() != "debug_screen" ? a1->TopLayer() : SDK::TopLayer);
-
-		printf(SDK::TopLayer.c_str());
 		
 		return func_original(a1, mcuirc);
 	}
