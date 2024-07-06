@@ -10,4 +10,8 @@ void ModuleManager::IntializeModules() {
 	AddModule(new Zoom());
 }
 
+std::map<std::string, Module*> ModuleManager::GetModuleList() {
+	return Modules;
+}
+
 ModuleManager ModuleMgr = ModuleManager();
