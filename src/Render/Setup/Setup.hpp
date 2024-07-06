@@ -4,8 +4,11 @@
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <kiero.h>
+
 #include "../../Logger/Logger.hpp"
 #include "../../Memory/Memory.hpp"
+#include "../../Events/Event.hpp"
+
 #include "../ImGUI/imgui_impl_dx11.h"
 #include "../ImGUI/imgui_impl_dx12.h"
 #include "../ImGUI/imgui_impl_win32.h"
@@ -123,137 +126,132 @@ public:
 		ID3D11DeviceContext* ppContext = nullptr;
 		ID3D11Texture2D* pBackBuffer = nullptr;
 
+
 		d3d11Device->GetImmediateContext(&ppContext);
 
-		if (ppContext) {
+		if (!ppContext)
+			return;
 
-			if (SUCCEEDED(ppSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer))) {
+		if (FAILED(ppSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer)))
+			return;
 
-				if (SUCCEEDED(d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView))) {
-					ImGui_ImplDX11_NewFrame();
-					ImGui_ImplWin32_NewFrame();
-					ImGui::NewFrame();
+		if (FAILED(d3d11Device->CreateRenderTargetView(pBackBuffer, NULL, &mainRenderTargetView)))
+			return;
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
 
-					ImGui::GetForegroundDrawList()->AddRectFilled(ImVec2(), ImVec2(100, 100), IM_COL32_WHITE, 0, 240);
+		nes::event_holder<RenderEvent> event;
+		EventDispature.trigger(event);
 
-					ImGui::EndFrame();
-					ImGui::Render();
+		ImGui::EndFrame();
+		ImGui::Render();
 
-					ppContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
-					ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		ppContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-				};
+		if (pBackBuffer) pBackBuffer->Release();
 
-			};
+		if (mainRenderTargetView) mainRenderTargetView->Release();
 
-		};
-
-		if (pBackBuffer)
-			pBackBuffer->Release();
-
-		if (mainRenderTargetView)
-			mainRenderTargetView->Release();
-
-		if (ppContext)
-			ppContext->Release();
+		if (ppContext) ppContext->Release();
 	}
 
+
+
 	static void RenderDX12(IDXGISwapChain3* ppSwapChain) {
-		if (d3d12CommandQueue) {
+		if (!d3d12CommandQueue)
+			return;
 
-			DXGI_SWAP_CHAIN_DESC sdesc;
-			ppSwapChain->GetDesc(&sdesc);
-			sdesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-			sdesc.OutputWindow = window;
-			sdesc.Windowed = ((GetWindowLongPtr(window, GWL_STYLE) & WS_POPUP) != 0) ? false : true;
+		DXGI_SWAP_CHAIN_DESC sdesc;
+		ppSwapChain->GetDesc(&sdesc);
+		sdesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		sdesc.OutputWindow = window;
+		sdesc.Windowed = ((GetWindowLongPtr(window, GWL_STYLE) & WS_POPUP) != 0) ? false : true;
 
-			buffersCounts = sdesc.BufferCount;
-			frameContexts.resize(buffersCounts);
+		buffersCounts = sdesc.BufferCount;
+		frameContexts.resize(buffersCounts);
 
-			D3D12_DESCRIPTOR_HEAP_DESC descriptorImGuiRender = {};
-			descriptorImGuiRender.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-			descriptorImGuiRender.NumDescriptors = buffersCounts;
-			descriptorImGuiRender.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		D3D12_DESCRIPTOR_HEAP_DESC descriptorImGuiRender = {};
+		descriptorImGuiRender.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		descriptorImGuiRender.NumDescriptors = buffersCounts;
+		descriptorImGuiRender.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-			if(!d3d12DescriptorHeapImGuiRender)
-				if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorImGuiRender, IID_PPV_ARGS(&d3d12DescriptorHeapImGuiRender))))
-					return;
-
-			if (FAILED(d3d12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator))))
+		if (!d3d12DescriptorHeapImGuiRender)
+			if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorImGuiRender, IID_PPV_ARGS(&d3d12DescriptorHeapImGuiRender))))
 				return;
 
-			for (size_t i = 0; i < buffersCounts; i++) {
-				frameContexts[i].commandAllocator = allocator;
-			};
+		if (FAILED(d3d12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator))))
+			return;
 
-			if (FAILED(d3d12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator, NULL, IID_PPV_ARGS(&d3d12CommandList))))
-				return;
-
-			D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers;
-			descriptorBackBuffers.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-			descriptorBackBuffers.NumDescriptors = buffersCounts;
-			descriptorBackBuffers.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-			descriptorBackBuffers.NodeMask = 1;
-
-			if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorBackBuffers, IID_PPV_ARGS(&d3d12DescriptorHeapBackBuffers))))
-				return;
-
-			const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-			D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
-
-			for (size_t i = 0; i < buffersCounts; i++) {
-				ID3D12Resource* pBackBuffer = nullptr;
-
-				frameContexts
-					[i].main_render_target_descriptor = rtvHandle;
-				ppSwapChain->GetBuffer(i, IID_PPV_ARGS(&pBackBuffer));
-				d3d12Device->CreateRenderTargetView(pBackBuffer, nullptr, rtvHandle);
-				frameContexts
-					[i].main_render_target_resource = pBackBuffer;
-				rtvHandle.ptr += rtvDescriptorSize;
-
-				pBackBuffer->Release();
-			};
-
-			InitImGUI();
-
-			ImGui_ImplDX12_NewFrame();
-			ImGui_ImplWin32_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::GetForegroundDrawList()->AddRectFilled(ImVec2(), ImVec2(100, 100), IM_COL32_WHITE, 0, 240);
-
-			FrameContext& currentFrameContext = frameContexts
-				[ppSwapChain->GetCurrentBackBufferIndex()];
-			currentFrameContext.commandAllocator->Reset();
-
-			D3D12_RESOURCE_BARRIER barrier;
-			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-			barrier.Transition.pResource = currentFrameContext.main_render_target_resource;
-			barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-
-			d3d12CommandList->Reset(currentFrameContext.commandAllocator, nullptr);
-			d3d12CommandList->ResourceBarrier(1, &barrier);
-			d3d12CommandList->OMSetRenderTargets(1, &currentFrameContext.main_render_target_descriptor, FALSE, nullptr);
-			d3d12CommandList->SetDescriptorHeaps(1, &d3d12DescriptorHeapImGuiRender);
-
-			ImGui::EndFrame();
-			ImGui::Render();
-
-			ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), d3d12CommandList);
-
-			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-
-			d3d12CommandList->ResourceBarrier(1, &barrier);
-			d3d12CommandList->Close();
-
-			d3d12CommandQueue->ExecuteCommandLists(1, reinterpret_cast<ID3D12CommandList* const*>(&d3d12CommandList));
-
+		for (size_t i = 0; i < buffersCounts; i++) {
+			frameContexts[i].commandAllocator = allocator;
 		};
+
+		if (FAILED(d3d12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, allocator, NULL, IID_PPV_ARGS(&d3d12CommandList))))
+			return;
+
+		D3D12_DESCRIPTOR_HEAP_DESC descriptorBackBuffers;
+		descriptorBackBuffers.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+		descriptorBackBuffers.NumDescriptors = buffersCounts;
+		descriptorBackBuffers.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		descriptorBackBuffers.NodeMask = 1;
+
+		if (FAILED(d3d12Device->CreateDescriptorHeap(&descriptorBackBuffers, IID_PPV_ARGS(&d3d12DescriptorHeapBackBuffers))))
+			return;
+
+		const auto rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = d3d12DescriptorHeapBackBuffers->GetCPUDescriptorHandleForHeapStart();
+
+		for (size_t i = 0; i < buffersCounts; i++) {
+			ID3D12Resource* pBackBuffer = nullptr;
+
+			frameContexts[i].main_render_target_descriptor = rtvHandle;
+			ppSwapChain->GetBuffer(i, IID_PPV_ARGS(&pBackBuffer));
+			d3d12Device->CreateRenderTargetView(pBackBuffer, nullptr, rtvHandle);
+			frameContexts[i].main_render_target_resource = pBackBuffer;
+			rtvHandle.ptr += rtvDescriptorSize;
+
+			pBackBuffer->Release();
+		};
+
+		InitImGUI();
+
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		nes::event_holder<RenderEvent> event;
+		EventDispature.trigger(event);
+
+		FrameContext& currentFrameContext = frameContexts[ppSwapChain->GetCurrentBackBufferIndex()];
+		currentFrameContext.commandAllocator->Reset();
+
+		D3D12_RESOURCE_BARRIER barrier;
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier.Transition.pResource = currentFrameContext.main_render_target_resource;
+		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+		d3d12CommandList->Reset(currentFrameContext.commandAllocator, nullptr);
+		d3d12CommandList->ResourceBarrier(1, &barrier);
+		d3d12CommandList->OMSetRenderTargets(1, &currentFrameContext.main_render_target_descriptor, FALSE, nullptr);
+		d3d12CommandList->SetDescriptorHeaps(1, &d3d12DescriptorHeapImGuiRender);
+
+		ImGui::EndFrame();
+		ImGui::Render();
+
+		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), d3d12CommandList);
+
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+
+		d3d12CommandList->ResourceBarrier(1, &barrier);
+		d3d12CommandList->Close();
+
+		d3d12CommandQueue->ExecuteCommandLists(1, reinterpret_cast<ID3D12CommandList* const*>(&d3d12CommandList));
 
 		if (allocator) {
 			allocator->Release();
