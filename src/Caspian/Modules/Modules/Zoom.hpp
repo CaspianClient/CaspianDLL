@@ -5,50 +5,62 @@
 #include "../../SDK/SDK.hpp"
 #include <functional>
 
-class Zoom : public Module {
+class Zoom : public Module
+{
 public:
-
 	bool EnableZoom = false;
 	float fov = 30;
 
-	Zoom() : Module("Zoom", "Optifine Zoom") {
-		EventDispature.listen<KeyboardEvent>(KeyEvent);
-		EventDispature.listen<GetFOVevent>(getFovEvent);
-		EventDispature.listen<MouseScrollEvent>(mScrollEvent);
+	Zoom() : Module("Zoom", "Optifine Zoom")
+	{
+		EventDispatcher.listen<KeyboardEvent>(KeyEvent);
+		EventDispatcher.listen<GetFOVevent>(getFovEvent);
+		EventDispatcher.listen<MouseScrollEvent>(mScrollEvent);
 
 		ConfigMgr.set(this->getName(), "enabled", true, false);
 	}
 
-	std::function<void(KeyboardEvent&)> KeyEvent = [&](KeyboardEvent& event) {
-		if (event.key == 67) {
+	std::function<void(KeyboardEvent &)> KeyEvent = [&](KeyboardEvent &event)
+	{
+		if (event.key == 67)
+		{
 			EnableZoom = event.state;
-			if (event.state == false) {
+			if (event.state == false)
+			{
 				fov = 30;
 			}
 		};
 	};
 
-	std::function<void(GetFOVevent&)> getFovEvent = [&](GetFOVevent& event) {
-		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen") {
+	std::function<void(GetFOVevent &)> getFovEvent = [&](GetFOVevent &event)
+	{
+		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen")
+		{
 			event.fov = fov;
 		}
 	};
 
-	std::function<void(MouseScrollEvent&)> mScrollEvent = [&](MouseScrollEvent& event) {
-		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen") {
+	std::function<void(MouseScrollEvent &)> mScrollEvent = [&](MouseScrollEvent &event)
+	{
+		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen")
+		{
 			event.mCancel = true;
-			if (event.ScrollUp) {
+			if (event.ScrollUp)
+			{
 				if (fov <= 15)
 					fov = fov - 7;
 				else
 					fov = fov - 15;
 			}
-			else {
+			else
+			{
 				fov = fov + 15;
 			}
 
-			if (fov > 90) fov = 90;
-			else if (fov < 1) fov = 1;
+			if (fov > 90)
+				fov = 90;
+			else if (fov < 1)
+				fov = 1;
 		}
 	};
 };

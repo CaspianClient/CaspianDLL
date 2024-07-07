@@ -10,7 +10,8 @@
 
 bool Init::disabled = false;
 
-void Init::Initialize() {
+void Init::Initialize()
+{
 	Logger::SetupLogger();
 	SigManager::IntializeSigs();
 	ConfigMgr.loadConfig();
@@ -22,20 +23,22 @@ void Init::Initialize() {
 
 	Logger::info("Injection Completed");
 
-	EventDispature.listen<KeyboardEvent>([&](KeyboardEvent& event) {
+	EventDispatcher.listen<KeyboardEvent>([&](KeyboardEvent &event)
+																				{
 		if (event.key == 46) {
 			EjectClient();
-		}
-		});
+		} });
 	return;
 }
 
-void Init::EjectClient() {
+void Init::EjectClient()
+{
 	MH_DisableHook(MH_ALL_HOOKS);
 	printf("Client Ejected\n");
 	disabled = true;
 }
 
-bool Init::isDisabled() {
+bool Init::isDisabled()
+{
 	return disabled;
 }

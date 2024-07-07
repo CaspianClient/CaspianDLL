@@ -5,4 +5,4 @@
 #include "EventTypes/OtherEvents.hpp"
 #include "EventTypes/RenderEvent.hpp"
 
-extern nes::event_dispatcher EventDispature;
+extern nes::event_dispatcher EventDispatcher;
