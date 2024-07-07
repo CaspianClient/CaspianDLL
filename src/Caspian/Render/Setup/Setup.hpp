@@ -13,6 +13,10 @@
 #include "../ImGUI/imgui_impl_dx12.h"
 #include "../ImGUI/imgui_impl_win32.h"
 
+#include "../../Resources/PoppinsFont.h"
+
+#include "../RenderUtils/RenderUtils.hpp"
+
 struct FrameContext {
 	ID3D12CommandAllocator* commandAllocator = nullptr;
 	ID3D12Resource* main_render_target_resource = nullptr;
@@ -116,6 +120,7 @@ public:
 					d3d12DescriptorHeapImGuiRender->GetCPUDescriptorHandleForHeapStart(),
 					d3d12DescriptorHeapImGuiRender->GetGPUDescriptorHandleForHeapStart());
 			}
+			ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)PoppinsFont, PoppinsFont_size, 50);
 
 			ImGUIintialized = true;
 		}
