@@ -126,6 +126,11 @@ public:
 		}
 	}
 
+	static void RenderFrame() {
+		nes::event_holder<RenderEvent> event;
+		EventDispature.trigger(event);
+	}
+
 	static void RenderDX11(IDXGISwapChain3* ppSwapChain) {
 		ID3D11RenderTargetView* mainRenderTargetView = nullptr;
 		ID3D11DeviceContext* ppContext = nullptr;
@@ -146,8 +151,7 @@ public:
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-		nes::event_holder<RenderEvent> event;
-		EventDispature.trigger(event);
+		RenderFrame();
 
 		ImGui::EndFrame();
 		ImGui::Render();
@@ -161,8 +165,6 @@ public:
 
 		if (ppContext) ppContext->Release();
 	}
-
-
 
 	static void RenderDX12(IDXGISwapChain3* ppSwapChain) {
 		if (!d3d12CommandQueue)
@@ -226,8 +228,7 @@ public:
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-		nes::event_holder<RenderEvent> event;
-		EventDispature.trigger(event);
+		RenderFrame();
 
 		FrameContext& currentFrameContext = frameContexts[ppSwapChain->GetCurrentBackBufferIndex()];
 		currentFrameContext.commandAllocator->Reset();
