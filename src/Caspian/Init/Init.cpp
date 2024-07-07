@@ -6,6 +6,7 @@
 #include "../Config/ConfigManager.hpp"
 #include "../Logger/Logger.hpp"
 #include "../Render/Setup/Setup.hpp"
+#include "../Resources/ResourceManager.hpp"
 
 bool Init::disabled = false;
 
@@ -16,6 +17,7 @@ void Init::Initialize() {
 	HookManager::InitializeHooks();
 	ModuleMgr.IntializeModules();
 	ConfigMgr.saveConfig();
+	resourceManager.LoadResources();
 	SetupImGUI::IntializeSetup();
 
 	Logger::info("Injection Completed");

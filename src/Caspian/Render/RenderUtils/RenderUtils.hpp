@@ -11,6 +11,7 @@ class RenderUtils {
 private:
 	DrawListType CurrentDrawList = BackGround;
 
+
 public:
 	void SetCurrentDrawList(DrawListType DrawList) {
 		CurrentDrawList = DrawList;

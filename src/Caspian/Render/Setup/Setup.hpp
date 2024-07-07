@@ -13,7 +13,7 @@
 #include "../ImGUI/imgui_impl_dx12.h"
 #include "../ImGUI/imgui_impl_win32.h"
 
-#include "../../Resources/PoppinsFont.h"
+#include "../../Resources/ResourceManager.hpp"
 
 #include "../RenderUtils/RenderUtils.hpp"
 
@@ -120,7 +120,8 @@ public:
 					d3d12DescriptorHeapImGuiRender->GetCPUDescriptorHandleForHeapStart(),
 					d3d12DescriptorHeapImGuiRender->GetGPUDescriptorHandleForHeapStart());
 			}
-			ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)PoppinsFont, PoppinsFont_size, 50);
+			Resource Font = GET_RESOURCE("PoppinsFont")
+			ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)Font.data, Font.size, 50);
 
 			ImGUIintialized = true;
 		}
