@@ -128,6 +128,7 @@ public:
 	}
 
 	static void RenderFrame() {
+		
 		nes::event_holder<RenderEvent> event;
 		EventDispature.trigger(event);
 	}

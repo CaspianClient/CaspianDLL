@@ -1,5 +1,6 @@
 #pragma once
 #include "../ImGUI/imgui.h"
+#include <string>
 #include <Vectors.hpp>
 
 enum DrawListType {
@@ -50,6 +51,32 @@ public:
 
 	void RectMultiColor(Vec2 Position, Vec2 Size, ImColor topLeft, ImColor topRight, ImColor bottomLeft, ImColor bottomRight) {
 		getDrawList()->AddRectFilledMultiColor(Position, Position + Size, topLeft, topRight, bottomRight, bottomLeft);
+	}
+
+//Rendering Other Things
+public:
+	void Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment) {
+		float fSize = FontSize;
+
+		ImGui::SetWindowFontScale(fSize);
+
+		switch (Alignment) {
+			case 1: 
+				break;
+
+			case 2: {
+				Position.x += (PaddingSize.x / 2) - (ImGui::CalcTextSize(Text.c_str()).x / 2);
+				break;
+			}
+
+			case 3: {
+				Position.x += (PaddingSize.x - ImGui::CalcTextSize(Text.c_str()).x);
+				break;
+			}
+		}
+
+		Position.y += (PaddingSize.y / 2) - (ImGui::CalcTextSize(Text.c_str()).y / 2);
+		getDrawList()->AddText(Position, TextColor, Text.c_str());
 	}
 };
 
