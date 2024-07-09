@@ -132,7 +132,7 @@ public:
 		//RndrUtils.Text(Vec2(), Vec2(1920, 1000), IM_COL32_WHITE, std::to_string(Client::GetLeftCPS()) + " | " + std::to_string(Client::GetRightCPS()), 0.5, 2);
 		RndrUtils.Text(Vec2(), Vec2(1920, 1000), IM_COL32_WHITE, "FPS: " + std::to_string(Client::FPS), 0.5, 2);
 		nes::event_holder<RenderEvent> event;
-		EventDispature.trigger(event);
+		EventDispatcher.trigger(event);
 	}
 
 	static void RenderDX11(IDXGISwapChain3* ppSwapChain) {
