@@ -1,7 +1,9 @@
 #pragma once
 #include "../ImGUI/imgui.h"
+#include "../../Resources/ResourceManager.hpp"
 #include <string>
 #include <Vectors.hpp>
+#include <map>
 
 enum DrawListType {
 	ForeGround,
@@ -10,13 +12,20 @@ enum DrawListType {
 
 class RenderUtils {
 private:
+	//Drawlist Type
 	DrawListType CurrentDrawList = BackGround;
 
+	//Fonts
+	std::map<std::string, ImFont*> FontList;
+	bool FontSetup = false;
+	
 
+// ImGui Config Settings
 public:
 	void SetCurrentDrawList(DrawListType DrawList) {
 		CurrentDrawList = DrawList;
 	}
+
 	ImDrawList* getDrawList() {
 		switch (CurrentDrawList)
 		{
@@ -27,6 +36,12 @@ public:
 		default:
 			return nullptr;
 		}
+	}
+
+	void SetupFonts() {
+		Resource mcFont = GET_RESOURCE("MinecraftFont");
+		FontList["MinecraftFont"] = ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)mcFont.data, mcFont.size, 100);
+		FontSetup = true;
 	}
 
 //Utilities
@@ -55,7 +70,13 @@ public:
 
 //Rendering Other Things
 public:
-	void Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment) {
+	void Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, std::string Font = "MinecraftFont") {
+
+		if (!FontSetup) {
+			SetupFonts();
+		}
+
+		ImGui::PushFont(FontList[Font]);
 		float fSize = FontSize;
 
 		ImGui::SetWindowFontScale(fSize);
@@ -77,6 +98,7 @@ public:
 
 		Position.y += (PaddingSize.y / 2) - (ImGui::CalcTextSize(Text.c_str()).y / 2);
 		getDrawList()->AddText(Position, TextColor, Text.c_str());
+		ImGui::PopFont();
 	}
 };
 

@@ -16,6 +16,7 @@
 #include "../../Resources/ResourceManager.hpp"
 
 #include "../RenderUtils/RenderUtils.hpp"
+#include "../../Client/Client.hpp"
 
 struct FrameContext {
 	ID3D12CommandAllocator* commandAllocator = nullptr;
@@ -120,15 +121,16 @@ public:
 					d3d12DescriptorHeapImGuiRender->GetCPUDescriptorHandleForHeapStart(),
 					d3d12DescriptorHeapImGuiRender->GetGPUDescriptorHandleForHeapStart());
 			}
-			Resource Font = GET_RESOURCE("PoppinsFont")
-			ImGui::GetIO().Fonts->AddFontFromMemoryTTF((void*)Font.data, Font.size, 50);
+
+			RndrUtils.SetupFonts();
 
 			ImGUIintialized = true;
 		}
 	}
 
 	static void RenderFrame() {
-		
+		//RndrUtils.Text(Vec2(), Vec2(1920, 1000), IM_COL32_WHITE, std::to_string(Client::GetLeftCPS()) + " | " + std::to_string(Client::GetRightCPS()), 0.5, 2);
+		RndrUtils.Text(Vec2(), Vec2(1920, 1000), IM_COL32_WHITE, "FPS: " + std::to_string(Client::FPS), 0.5, 2);
 		nes::event_holder<RenderEvent> event;
 		EventDispature.trigger(event);
 	}

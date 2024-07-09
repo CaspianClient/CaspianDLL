@@ -19,11 +19,7 @@ public:
 			EventDispature.trigger(ScrollEvent);
 			if (ScrollEvent->mCancel) mCancel = true;
 		}
-		nes::event_holder<MouseEvent> mouseEvent;
-		mouseEvent->action = (MouseAction)action;
-		mouseEvent->button = (MouseButton)button;
-		mouseEvent->mouseX = mouse_x;
-		mouseEvent->mouseY = mouse_y;
+		nes::event_holder<MouseEvent> mouseEvent(button, action, mouse_x, mouse_y);
 
 		EventDispature.trigger(mouseEvent);
 		if (mouseEvent->mCancel) mCancel = true;

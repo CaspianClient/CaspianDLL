@@ -7,6 +7,7 @@
 #include "../Logger/Logger.hpp"
 #include "../Render/Setup/Setup.hpp"
 #include "../Resources/ResourceManager.hpp"
+#include "../Client/Client.hpp"
 
 bool Init::disabled = false;
 
@@ -15,6 +16,7 @@ void Init::Initialize() {
 	SigManager::IntializeSigs();
 	ConfigMgr.loadConfig();
 	HookManager::InitializeHooks();
+	Client::InitClientInfo();
 	ModuleMgr.IntializeModules();
 	ConfigMgr.saveConfig();
 	resourceManager.LoadResources();
