@@ -33,6 +33,8 @@ public:
 				frameCount = 0;
 				lastTime = currentTime;
 			}
+
+			WindowSize = Vec2(ImGui::GetWindowSize());
 			});
 	}
 	static inline int FPS = 0;
@@ -64,4 +66,8 @@ public:
 	}
 
 	static inline float Delta = 0;
+
+	static inline Vec2 WindowSize = Vec2();
+
+	static inline Vec2 ScreenSize = Vec2();
 };

@@ -124,6 +124,12 @@ public:
 
 			RndrUtils.SetupFonts();
 
+			RECT desktop;
+			const HWND hDesktop = GetDesktopWindow();
+			GetWindowRect(hDesktop, &desktop);
+
+			Client::WindowSize = Vec2(desktop.right, desktop.bottom);
+
 			ImGUIintialized = true;
 		}
 	}
