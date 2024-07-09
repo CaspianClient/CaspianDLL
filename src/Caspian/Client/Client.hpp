@@ -12,7 +12,7 @@ class Client {
 	static inline int frameCount = 0;
 public:
 	static void InitClientInfo() {
-		EventDispature.listen<MouseEvent>([&](MouseEvent& event) {
+		EventDispatcher.listen<MouseEvent>([&](MouseEvent& event) {
 			if (event.action == MouseAction::PRESS) {
 				if (event.button == MouseButton::Left) {
 					LeftCPS.insert(LeftCPS.begin(), std::chrono::high_resolution_clock::now());
@@ -22,7 +22,7 @@ public:
 				}
 			}
 		});
-		EventDispature.listen<RenderEvent>([&](RenderEvent& event) {
+		EventDispatcher.listen<RenderEvent>([&](RenderEvent& event) {
 			frameCount++;
 
 			auto currentTime = std::chrono::high_resolution_clock::now();
