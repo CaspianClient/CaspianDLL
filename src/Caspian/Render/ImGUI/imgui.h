@@ -272,7 +272,7 @@ typedef void    (*ImGuiMemFreeFunc)(void* ptr, void* user_data);                
 IM_MSVC_RUNTIME_CHECKS_OFF
 struct ImVec2
 {
-    float                                   x, y;
+    float                                   x, y = 0;
     constexpr ImVec2()                      : x(0.0f), y(0.0f) { }
     constexpr ImVec2(float _x, float _y)    : x(_x), y(_y) { }
     float& operator[] (size_t idx)          { IM_ASSERT(idx == 0 || idx == 1); return ((float*)(void*)(char*)this)[idx]; } // We very rarely use this [] operator, so the assert overhead is fine.

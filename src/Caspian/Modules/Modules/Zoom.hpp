@@ -17,7 +17,7 @@ public:
 		EventDispatcher.listen<GetFOVevent>(getFovEvent);
 		EventDispatcher.listen<MouseScrollEvent>(mScrollEvent);
 
-		ConfigMgr.set(this->getName(), "enabled", true, false);
+		this->set("enabled", true, false);
 	}
 
 	std::function<void(KeyboardEvent &)> KeyEvent = [&](KeyboardEvent &event)
@@ -34,7 +34,7 @@ public:
 
 	std::function<void(GetFOVevent &)> getFovEvent = [&](GetFOVevent &event)
 	{
-		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen")
+		if (this->get<bool>("enabled") and EnableZoom and SDK::TopLayer == "hud_screen")
 		{
 			event.fov = fov;
 		}
@@ -42,7 +42,7 @@ public:
 
 	std::function<void(MouseScrollEvent &)> mScrollEvent = [&](MouseScrollEvent &event)
 	{
-		if (ConfigMgr.get<bool>(this->getName(), "enabled") and EnableZoom and SDK::TopLayer == "hud_screen")
+		if (this->get<bool>("enabled") and EnableZoom and SDK::TopLayer == "hud_screen")
 		{
 			event.mCancel = true;
 			if (event.ScrollUp)

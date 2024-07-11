@@ -1,6 +1,10 @@
 #pragma once
 #include "../ImGUI/imgui.h"
 #include "../../Resources/ResourceManager.hpp"
+#include "../../Client/Client.hpp"
+#include "Components/SizeComponent.hpp"
+#include "Components/PositionComponent.hpp"
+#include "Components/ColorComponent.hpp"
 #include <string>
 #include <Vectors.hpp>
 #include <map>
@@ -77,7 +81,7 @@ public:
 		}
 
 		ImGui::PushFont(FontList[Font]);
-		float fSize = FontSize;
+		float fSize = FontSize * Client::WindowSize.y / 1080;
 
 		ImGui::SetWindowFontScale(fSize);
 
@@ -102,4 +106,4 @@ public:
 	}
 };
 
-extern RenderUtils RndrUtils = RenderUtils();
+extern inline RenderUtils RndrUtils = RenderUtils();

@@ -35,7 +35,7 @@ ID3D12CommandAllocator* allocator;
 
 uint64_t buffersCounts;
 std::vector<FrameContext> frameContexts;
-//ID3D12Device5* d3d12Device5;
+ID3D12Device5* d3d12Device5;
 
 bool ImGUIintialized = false;
 bool killed = false;
@@ -57,6 +57,14 @@ class SetupImGUI {
 	}
 
 	static void Present(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
+
+		if (!killed) {
+			ppSwapChain->GetDevice(IID_PPV_ARGS(&d3d12Device5));
+			d3d12Device5->RemoveDevice();
+			killed = true;
+			return Present_original(ppSwapChain, syncInterval, flags);
+		}
+
 		InitSwapchainDevice(ppSwapChain);
 
 		if (d3d11Device) {
@@ -135,8 +143,6 @@ public:
 	}
 
 	static void RenderFrame() {
-		//RndrUtils.Text(Vec2(), Vec2(1920, 1000), IM_COL32_WHITE, std::to_string(Client::GetLeftCPS()) + " | " + std::to_string(Client::GetRightCPS()), 0.5, 2);
-		RndrUtils.Text(Vec2(), Vec2(1920, 1000), IM_COL32_WHITE, "FPS: " + std::to_string(Client::FPS), 0.5, 2);
 		nes::event_holder<RenderEvent> event;
 		EventDispatcher.trigger(event);
 	}
