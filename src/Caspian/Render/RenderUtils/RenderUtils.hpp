@@ -56,6 +56,8 @@ public:
 
 	void RectMultiColor(Vec2 Position, Vec2 Size, ImColor topLeft, ImColor topRight, ImColor bottomLeft, ImColor bottomRight);
 
+	void RoundedShadows(Vec2 pos, Vec2 size, ImU32 color, float rounding, int shadowSize);
+
 //Rendering Other Things
 public:
 	void Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, std::string Font = "MinecraftFont");

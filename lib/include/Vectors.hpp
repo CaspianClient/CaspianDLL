@@ -11,6 +11,10 @@ public:
 	Vec2 operator+(const Vec2 Vec) {
 		return Vec2(this->x + Vec.x, this->y + Vec.y);
 	}
+
+	Vec2 operator-(const Vec2 Vec) {
+		return Vec2(this->x - Vec.x, this->y - Vec.y);
+	}
 };
 
 class Vec3 {

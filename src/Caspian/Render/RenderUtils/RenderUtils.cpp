@@ -343,3 +343,30 @@ void RenderUtils::RenderImage(Vec2 Pos, Vec2 size, std::string image, ImColor im
 		}
 	}
 }
+
+inline float GetColorComponent(ImU32 color, int shift) {
+    return ((color >> shift) & 0xFF) / 255.0f;
+}
+
+void RenderUtils::RoundedShadows(Vec2 pos, Vec2 size, ImU32 color, float rounding, int shadowSize)
+{
+	ImColor shadowColor = color;
+	shadowColor.Value.w *= .5f;
+
+    for (int i = 0; i < shadowSize; i++)
+    {
+        float progress = (float)i / shadowSize;
+        float alphaFactor = (1.0f - progress) * (1.0f - progress); //took help from gpt for alpha factor
+
+        float shadowR = GetColorComponent(shadowColor, IM_COL32_R_SHIFT);
+        float shadowG = GetColorComponent(shadowColor, IM_COL32_G_SHIFT);
+        float shadowB = GetColorComponent(shadowColor, IM_COL32_B_SHIFT);
+        float shadowA = GetColorComponent(shadowColor, IM_COL32_A_SHIFT) * alphaFactor;
+
+        ImU32 fadedShadowColor = ImColor(shadowR, shadowG, shadowB, shadowA);
+
+        Vec2 offset = Vec2(progress * shadowSize, progress * shadowSize);
+		RoundedRectBorder(pos - offset, size + offset + offset, fadedShadowColor, 2.0f, rounding + progress * shadowSize);
+    }
+	RoundedRectBorder(pos, size, color, 1, rounding);
+}
