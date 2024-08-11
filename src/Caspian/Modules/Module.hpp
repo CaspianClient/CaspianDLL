@@ -29,6 +29,9 @@ public:
 	virtual void LoadSettings(bool Override = false) {}
 
 	virtual void RenderHud(const std::string text) {
+		if (!this->get<bool>("enabled")) {
+			return;
+		}
 		PositionComponent pos = PositionComponent(this->get<float>("posX"), this->get<float>("posY"));
 		float Size = this->get<float>("Size");
 		SizeComponent size = SizeComponent(.15 * Size, .045 * Size);

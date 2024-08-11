@@ -43,4 +43,8 @@ public:
 
 		return clip;
 	}
+
+	static Vec2 CenterRect(Vec2 PaddingSize, Vec2 RectSize, Vec2 PaddingPos = Vec2()) {
+		return PaddingPos + ((PaddingSize / 2) - (RectSize / 2));
+	}
 };
