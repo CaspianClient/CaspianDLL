@@ -11,6 +11,8 @@
 #include <Vectors.hpp>
 #include <map>
 
+#include <vector>
+
 enum DrawListType {
 	ForeGround,
 	BackGround
@@ -48,6 +50,12 @@ public:
 
 	void PopClipRect();
 
+//Non-render related helpers
+public:
+	ImColor VecToImcolor(std::vector<float> color);
+
+	std::vector<float> ImcolorToVec(ImColor color);
+
 //Rendering Shapes
 public:
 	void RoundedRectFilled(Vec2 Position, Vec2 Size, ImColor Colour, float Rounding = 0.0f, int Flags = 240);
@@ -57,6 +65,10 @@ public:
 	void RectMultiColor(Vec2 Position, Vec2 Size, ImColor topLeft, ImColor topRight, ImColor bottomLeft, ImColor bottomRight);
 
 	void RoundedShadows(Vec2 pos, Vec2 size, ImU32 color, float rounding, int shadowSize);
+
+	void CircleFilled(Vec2 pos, float Radius, ImU32 color);
+
+	void TriangleFilled(Vec2 Vertex1, Vec2 Vertex2, Vec2 Vertex3, ImU32 color);
 
 //Rendering Other Things
 public:

@@ -47,4 +47,15 @@ public:
 	static Vec2 CenterRect(Vec2 PaddingSize, Vec2 RectSize, Vec2 PaddingPos = Vec2()) {
 		return PaddingPos + ((PaddingSize / 2) - (RectSize / 2));
 	}
+
+	static void onButtonClick(Vec2 ButtonPos, Vec2 ButtonSize, auto Func) {
+		if (MouseInRect(ButtonPos, ButtonSize) and Client::MouseClickLeft) {
+			return Func();
+		}
+	}
+
+	static float lerp(float& current, float endValue, float delta) {
+		current = current + (endValue - current) * delta;
+		return current;
+	}
 };

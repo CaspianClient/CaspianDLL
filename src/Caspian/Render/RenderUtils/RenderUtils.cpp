@@ -375,24 +375,21 @@ void RenderUtils::RoundedShadows(Vec2 pos, Vec2 size, ImU32 color, float roundin
 			240
 		);
 	}
+}
 
-	//ImColor shadowColor = color;
-	//shadowColor.Value.w *= .5f;
-	//
-    //for (int i = 0; i < shadowSize; i++)
-    //{
-    //    float progress = (float)i / shadowSize;
-    //    float alphaFactor = (1.0f - progress) * (1.0f - progress); //took help from gpt for alpha factor
-	//
-    //    float shadowR = GetColorComponent(shadowColor, IM_COL32_R_SHIFT);
-    //    float shadowG = GetColorComponent(shadowColor, IM_COL32_G_SHIFT);
-    //    float shadowB = GetColorComponent(shadowColor, IM_COL32_B_SHIFT);
-    //    float shadowA = GetColorComponent(shadowColor, IM_COL32_A_SHIFT) * alphaFactor;
-	//
-    //    ImU32 fadedShadowColor = ImColor(shadowR, shadowG, shadowB, shadowA);
-	//
-    //    Vec2 offset = Vec2(progress * shadowSize, progress * shadowSize);
-	//	RoundedRectBorder(pos - offset, size + offset + offset, fadedShadowColor, 2.0f, rounding + progress * shadowSize);
-    //}
-	//RoundedRectBorder(pos, size, color, 1, rounding);
+void RenderUtils::CircleFilled(Vec2 pos, float Radius, ImU32 color) {
+	getDrawList()->AddCircleFilled(pos, Radius, color);
+}
+
+void RenderUtils::TriangleFilled(Vec2 Vertex1, Vec2 Vertex2, Vec2 Vertex3, ImU32 color) {
+	getDrawList()->AddTriangleFilled(Vertex1, Vertex2, Vertex3, color);
+}
+
+ImColor RenderUtils::VecToImcolor(std::vector<float> color) {
+	return ImColor(color[0], color[1], color[2], color[3]);
+}
+
+std::vector<float> RenderUtils::ImcolorToVec(ImColor color) {
+	std::vector<float> col = { color.Value.x, color.Value.y, color.Value.z, color.Value.w };
+	return col;
 }

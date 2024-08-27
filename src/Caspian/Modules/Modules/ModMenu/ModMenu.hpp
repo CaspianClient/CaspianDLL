@@ -19,6 +19,8 @@ public:
 	void RenderModcard(Module* mod, Vec2 pos);
 	void RenderModMenu();
 
+	std::string CurrModSetting = "";
+
 	std::function<void(KeyboardEvent&)> KeyEvent = [&](KeyboardEvent& event) {
 		if (this->get<bool>("enabled")) {
 			event.mCancel = true;

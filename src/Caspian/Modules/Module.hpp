@@ -6,7 +6,10 @@
 class Module {
 	std::string name;
 	std::string description;
+
+	std::map<std::string, bool> ColorPicker;
 public:
+	float SettingPos = 0;
 	bool enabled;
 	Module(std::string mName, std::string mDescription) {
 		this->name = mName;
@@ -28,54 +31,13 @@ public:
 
 	virtual void LoadSettings(bool Override = false) {}
 
-	virtual void RenderHud(const std::string text) {
-		if (!this->get<bool>("enabled")) {
-			return;
-		}
-		PositionComponent pos = PositionComponent(this->get<float>("posX"), this->get<float>("posY"));
-		float Size = this->get<float>("Size");
-		SizeComponent size = SizeComponent(.15 * Size, .045 * Size);
-		float MaximumSize = 2.5;
-		float MinimumSize = .5;
+	virtual void RenderSettings() {}
 
-		if (Utils::MouseInRect(pos, size)) {
-			if (Client::ScrollUP) {
-				float SetSize = this->get<float>("Size") + 0.2;
+	virtual void RenderHud(const std::string text);
 
-				if (SetSize <= MaximumSize) {
-					this->set("Size", SetSize);
-				}
-			}
-
-			else if (Client::ScrollDOWN) {
-				float SetSize = this->get<float>("Size") - 0.2;
-
-				if (SetSize >= MinimumSize) {
-					this->set("Size", SetSize);
-				}
-			}
-			if (Client::MouseHoldLeft and !isDragging) {
-				isDragging = true;
-				CursorPosHeld = Vec2(Client::MousePos.x - pos.x, Client::MousePos.y - pos.y);
-			}
-		}
-
-		if (Client::MouseHoldLeft == false)
-			isDragging = false;
-
-		if (isDragging) {
-			pos.x = Client::MousePos.x - CursorPosHeld.x;
-			pos.y = Client::MousePos.y - CursorPosHeld.y;
-
-			Utils::RectClippingOutside(pos, size);
-
-			this->set("posX", pos.x / Client::WindowSize.x);
-			this->set("posY", pos.y / Client::WindowSize.y);
-		}
-
-		RndrUtils.RoundedRectFilled(pos, size, ImColor(.1f, .1f, .1f, .6f), 0);
-		RndrUtils.Text(pos, size, IM_COL32_WHITE, text, .35 * Size, 2);
-	}
+	void AddToggle(std::string Setting, std::string DisplayName);
+	void AddSlider(std::string Setting, std::string DisplayName, float min, float max);
+	void AddColorPicker(std::string Setting, std::string DisplayName);
 
 private:
 	bool isDragging = false;
