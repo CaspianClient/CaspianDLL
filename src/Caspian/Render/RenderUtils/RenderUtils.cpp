@@ -265,6 +265,12 @@ void RenderUtils::RoundedRectBorder(Vec2 Position, Vec2 Size, ImColor Colour, fl
 	getDrawList()->AddRect(Position, Position + Size, Colour, Rounding, Flags, Thickness);
 }
 
+void RenderUtils::RoundedRectBorder(Vec2 Position, Vec2 Size, ImColor Colour, Vec2 InnerRectSize, float Rounding, int Flags) {
+	Vec2 innerPos = Utils::CenterRect(Size, InnerRectSize, Position);
+
+	getDrawList()->AddRect(innerPos, innerPos + InnerRectSize, Colour, Rounding, Flags, innerPos.x - Position.x);
+}
+
 void RenderUtils::RectMultiColor(Vec2 Position, Vec2 Size, ImColor topLeft, ImColor topRight, ImColor bottomLeft, ImColor bottomRight) {
 	getDrawList()->AddRectFilledMultiColor(Position, Position + Size, topLeft, topRight, bottomRight, bottomLeft);
 }

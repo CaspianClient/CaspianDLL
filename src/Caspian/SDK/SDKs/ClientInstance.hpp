@@ -9,10 +9,10 @@ public:
 	}
 
 	void GrabMouse() {
-		Memory::Call_vft<331, void>(this);
+		Memory::Call_vft<330, void>(this);
 	}
 
 	void ReleaseMouse() {
-		Memory::Call_vft<332, void>(this);
+		Memory::Call_vft<331, void>(this);
 	}
 };

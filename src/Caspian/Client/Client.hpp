@@ -10,6 +10,7 @@ class Client {
 	static inline std::vector<std::chrono::time_point<std::chrono::high_resolution_clock>> RightCPS = {};
 
 	static inline std::chrono::time_point<std::chrono::high_resolution_clock> lastTime = std::chrono::high_resolution_clock::now();
+	static inline std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
 	static inline int frameCount = 0;
 public:
 	static void InitClientInfo() {
@@ -26,7 +27,7 @@ public:
 				else if (event.button == MouseButton::Right) {
 					RightCPS.insert(RightCPS.begin(), std::chrono::high_resolution_clock::now());
 					MouseClickRight = true;
-					MouseHoldLeft = true;
+					MouseHoldRight = true;
 				}
 			}
 
@@ -35,7 +36,7 @@ public:
 					MouseHoldLeft = false;
 				}
 				else if (event.button == MouseButton::Right) {
-					MouseHoldLeft = false;
+					MouseHoldRight = false;
 				}
 			}
 
@@ -49,12 +50,21 @@ public:
 
 			auto currentTime = std::chrono::high_resolution_clock::now();
 			auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastTime).count();
+			std::chrono::duration<float> elapsed = currentTime - start;
 
-			if (elapsedTime >= 0.25) {
-				FPS = frameCount / elapsedTime;
+			if (elapsed.count() >= 0.5f) {
+				// Calculate frame rate based on elapsed time
+				FPS = static_cast<int>(frameCount / elapsed.count());
+				// Reset frame counter and update start time
 				frameCount = 0;
-				lastTime = currentTime;
+				start = currentTime;
 			}
+
+			std::chrono::duration<float> frameTime = currentTime - lastTime;
+			lastTime = currentTime;
+			float currentFrameRate = 1.0f / frameTime.count();
+
+			Delta = 60 / currentFrameRate;
 
 			WindowSize = Vec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
 
@@ -62,6 +72,10 @@ public:
 			MouseClickRight = false;
 			ScrollUP = false;
 			ScrollDOWN = false;
+			});
+
+		EventDispatcher.listen<KeyboardEvent, nes::event_priority::FIRST>([&](KeyboardEvent& event) {
+			keypressed[event.key] = event.state;
 			});
 	}
 
@@ -107,4 +121,6 @@ public:
 
 	static inline bool ScrollUP = false;
 	static inline bool ScrollDOWN = false;
+
+	static inline std::map<int, bool> keypressed = {};
 };

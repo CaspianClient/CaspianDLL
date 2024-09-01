@@ -16,8 +16,11 @@ public:
 		EventDispatcher.listen<MouseEvent>(mouseEvent);
 	}
 
+	float SettingScrollAmount = 0;
+
 	void RenderModcard(Module* mod, Vec2 pos);
 	void RenderModMenu();
+	void CurrSettingScroll(float amount);
 
 	std::string CurrModSetting = "";
 
@@ -43,11 +46,24 @@ public:
 	std::function<void(MouseEvent&)> mouseEvent = [&](MouseEvent& event) {
 		if (this->get<bool>("enabled")) {
 			event.mCancel = true;
+
+			if (event.button == MouseButton::Scroll) {
+				if (CurrModSetting != "") {
+					if (event.action == MouseAction::SCROLL_UP) {
+						SettingScrollAmount += 0.05;
+					}
+					else {
+						SettingScrollAmount += -0.05;
+					}
+				}
+			}
 		}
 	};
 
 	std::function<void(RenderEvent&)> renderEvent = [&](RenderEvent& event) {
 		if (this->get<bool>("enabled"))
 			RenderModMenu();
+		if (CurrModSetting == "")
+			SettingScrollAmount = 0;
 	};
 };

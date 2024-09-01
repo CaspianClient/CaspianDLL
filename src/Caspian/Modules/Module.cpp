@@ -11,40 +11,7 @@ void Module::RenderHud(const std::string text) {
 	float MaximumSize = 2.5;
 	float MinimumSize = .5;
 
-	if (Utils::MouseInRect(pos, size)) {
-		if (Client::ScrollUP) {
-			float SetSize = this->get<float>("Size") + 0.2;
-
-			if (SetSize <= MaximumSize) {
-				this->set("Size", SetSize);
-			}
-		}
-
-		else if (Client::ScrollDOWN) {
-			float SetSize = this->get<float>("Size") - 0.2;
-
-			if (SetSize >= MinimumSize) {
-				this->set("Size", SetSize);
-			}
-		}
-		if (Client::MouseHoldLeft and !isDragging) {
-			isDragging = true;
-			CursorPosHeld = Vec2(Client::MousePos.x - pos.x, Client::MousePos.y - pos.y);
-		}
-	}
-
-	if (Client::MouseHoldLeft == false)
-		isDragging = false;
-
-	if (isDragging) {
-		pos.x = Client::MousePos.x - CursorPosHeld.x;
-		pos.y = Client::MousePos.y - CursorPosHeld.y;
-
-		Utils::RectClippingOutside(pos, size);
-
-		this->set("posX", pos.x / Client::WindowSize.x);
-		this->set("posY", pos.y / Client::WindowSize.y);
-	}
+	handleDragging(pos, size);
 
 	RndrUtils.RoundedRectFilled(pos, size, RndrUtils.VecToImcolor(get<std::vector<float>>("BGcolor")), 0);
 	RndrUtils.Text(pos, size, RndrUtils.VecToImcolor(get<std::vector<float>>("TEXTcolor")), text, .35 * Size, 2);

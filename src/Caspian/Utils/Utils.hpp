@@ -58,4 +58,13 @@ public:
 		current = current + (endValue - current) * delta;
 		return current;
 	}
+
+	static ImColor LerpImColor(ImColor& currentCol, ImColor endColor, float delta) {
+		lerp(currentCol.Value.x, endColor.Value.x, delta);
+		lerp(currentCol.Value.y, endColor.Value.y, delta);
+		lerp(currentCol.Value.z, endColor.Value.z, delta);
+		lerp(currentCol.Value.w, endColor.Value.w, delta);
+
+		return currentCol;
+	}
 };

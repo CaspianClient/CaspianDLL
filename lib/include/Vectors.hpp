@@ -27,6 +27,10 @@ public:
 	Vec2 operator*(const Vec2 Vec) {
 		return Vec2(this->x * Vec.x, this->y * Vec.y);
 	}
+
+	friend Vec2 operator*(float scalar, const Vec2& vec) {
+        return Vec2(vec.x * scalar, vec.y * scalar);
+    }
 };
 
 class Vec3 {

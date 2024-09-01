@@ -27,7 +27,7 @@ void ModMenu::RenderModMenu() {
 		RndrUtils.PushClipRect(ModuleRectPos - ModCardSpacing, ModuleRectSize);
 		auto mod = ModuleMgr.GetModuleList()[CurrModSetting];
 		mod->RenderSettings();
-		mod->SettingPos = 0;
+		mod->SettingPos = SettingScrollAmount;
 		RndrUtils.PopClipRect();
 	}
 	else
@@ -36,4 +36,8 @@ void ModMenu::RenderModMenu() {
 			RenderModcard(x.second, ModuleRectPos);
 			ModuleRectPos.y += Client::WindowSize.y * 0.09;
 		}
+}
+
+void ModMenu::CurrSettingScroll(float amount) {
+	ModuleMgr.GetModuleList()[CurrModSetting]->SettingPos += amount;
 }

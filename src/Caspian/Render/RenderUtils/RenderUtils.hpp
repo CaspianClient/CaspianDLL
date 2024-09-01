@@ -62,6 +62,8 @@ public:
 
 	void RoundedRectBorder(Vec2 Position, Vec2 Size, ImColor Colour, float Thickness, float Rounding = 0.0f, int Flags = 240);
 
+	void RoundedRectBorder(Vec2 Position, Vec2 Size, ImColor Colour, Vec2 InnerRectSize, float Rounding = 0.0f, int Flags = 240);
+
 	void RectMultiColor(Vec2 Position, Vec2 Size, ImColor topLeft, ImColor topRight, ImColor bottomLeft, ImColor bottomRight);
 
 	void RoundedShadows(Vec2 pos, Vec2 size, ImU32 color, float rounding, int shadowSize);

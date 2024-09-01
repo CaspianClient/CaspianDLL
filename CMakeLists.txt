@@ -57,6 +57,7 @@ download(entt https://github.com/skypjack/entt.git fedcb920ce0068c35ffbc66fd4e84
 download(libhat https://github.com/BasedInc/libhat.git 82de2e6f19d3a5c0123d32ef6a5059034312df7b)
 download(glm https://github.com/g-truc/glm.git 673a963a0f1eb82f5fcef00b7b873371555e5814)
 download(nes https://github.com/DisabledMallis/NuvolaEventSystem c246a10bb5d3c952d62fcc175e5f6da0f81843bf)
+download(entt https://github.com/skypjack/entt.git 78213075654a688e9da6bc49f7f873d25c26d12c)
 
 # Disable RTTI
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -65,4 +66,4 @@ elseif (MSVC)
     target_compile_options(Caspian PRIVATE /GR-)
 endif()
 
-target_link_libraries(Caspian PRIVATE windowscodecs.lib urlmon.lib dwrite.lib d3d12.lib dxgi.lib d3d11.lib d2d1.lib wininet.lib minhook EnTT libhat NES version)
+target_link_libraries(Caspian PRIVATE windowscodecs.lib urlmon.lib dwrite.lib d3d12.lib dxgi.lib d3d11.lib d2d1.lib wininet.lib minhook EnTT libhat NES EnTT version)
