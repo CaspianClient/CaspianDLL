@@ -5,6 +5,7 @@
 #include "Modules/FPS.hpp"
 #include "Modules/ModMenu/ModMenu.hpp"
 #include "Modules/Keystrokes.hpp"
+#include "Modules/Clock.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -15,6 +16,7 @@ void ModuleManager::IntializeModules() {
 	AddModule(new FPS());
 	AddModule(new ModMenu());
 	AddModule(new Keystrokes());
+	AddModule(new Clock());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {
