@@ -18,11 +18,16 @@ public:
 		EventDispatcher.listen<MouseScrollEvent>(mScrollEvent);
 
 		this->set("enabled", true, false);
+		this->set("keybind", 67, false);
+	}
+
+	void RenderSettings() override {
+		AddKeybindPicker("keybind", "Keybind");
 	}
 
 	std::function<void(KeyboardEvent &)> KeyEvent = [&](KeyboardEvent &event)
 	{
-		if (event.key == 67)
+		if (event.key == get<int>("keybind"))
 		{
 			EnableZoom = event.state;
 			if (event.state == false)

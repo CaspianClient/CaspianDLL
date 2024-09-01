@@ -72,10 +72,12 @@ public:
 			MouseClickRight = false;
 			ScrollUP = false;
 			ScrollDOWN = false;
+			KeyThisFrame = 0;
 			});
 
 		EventDispatcher.listen<KeyboardEvent, nes::event_priority::FIRST>([&](KeyboardEvent& event) {
 			keypressed[event.key] = event.state;
+			KeyThisFrame = event.key;
 			});
 	}
 
@@ -121,6 +123,8 @@ public:
 
 	static inline bool ScrollUP = false;
 	static inline bool ScrollDOWN = false;
+
+	static inline int KeyThisFrame = 0;
 
 	static inline std::map<int, bool> keypressed = {};
 };

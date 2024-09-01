@@ -102,3 +102,19 @@ void Module::AddColorPicker(std::string Setting, std::string DisplayName) {
 
 	SettingPos += 0.047;
 }
+
+void Module::AddKeybindPicker(std::string Setting, std::string DisplayName) {
+	SizeComponent ModuleRectSizeDecoy(.86, .56);
+	Vec2 ModuleRectPos = Utils::CenterRect(PositionComponent(1, 1), ModuleRectSizeDecoy);
+	ModuleRectPos.y += Client::WindowSize.y * (0.12 + SettingPos);
+	ModuleRectPos.x += Client::WindowSize.y * 0.02;
+	
+	int value = this->get<int>(Setting);
+	SettingsMenu::KeybindPicker(ModuleRectPos, value, Activekeybinds[Setting]);
+	this->set(Setting, value);
+
+	SizeComponent KeybindRectSize(0.11, 0.04);
+
+	ModuleRectPos.x += KeybindRectSize.x;
+	RndrUtils.Text(ModuleRectPos, Vec2(0, KeybindRectSize.y), IM_COL32_WHITE, DisplayName, .35, 1);
+}

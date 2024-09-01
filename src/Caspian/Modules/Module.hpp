@@ -8,6 +8,7 @@ class Module {
 	std::string description;
 
 	std::map<std::string, bool> ColorPicker;
+	std::map<std::string, bool> Activekeybinds;
 public:
 	float SettingPos = 0;
 	bool isDragging = false;
@@ -19,6 +20,13 @@ public:
 	}
 	std::string getName() {
 		return this->name;
+	}
+
+	bool AnyActiveKeybind() {
+		for (auto key : Activekeybinds) {
+			if (key.second) return true;
+		}
+		return false;
 	}
 
 	void handleDragging(Vec2& pos, const Vec2& totalModuleSize) {
@@ -62,5 +70,5 @@ public:
 	void AddToggle(std::string Setting, std::string DisplayName);
 	void AddSlider(std::string Setting, std::string DisplayName, float min, float max);
 	void AddColorPicker(std::string Setting, std::string DisplayName);
-
+	void AddKeybindPicker(std::string Setting, std::string DisplayName);
 };

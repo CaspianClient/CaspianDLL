@@ -22,6 +22,8 @@ public:
 	void RenderModMenu();
 	void CurrSettingScroll(float amount);
 
+	bool canClose();
+
 	std::string CurrModSetting = "";
 
 	std::function<void(KeyboardEvent&)> KeyEvent = [&](KeyboardEvent& event) {
@@ -29,7 +31,9 @@ public:
 			event.mCancel = true;
 		}
 
-		if (event.key == this->get<int>("keybind") and event.state == false) {
+		if (event.key == this->get<int>("keybind") and event.state) {
+			if (!canClose())
+				return;
 			this->set("enabled", !this->get<bool>("enabled"));
 			if (SDK::CI and SDK::TopLayer == "hud_screen") {
 				if (this->get<bool>("enabled")) {

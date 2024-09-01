@@ -53,4 +53,10 @@ public:
         using Fn = TRet(__thiscall*)(void*, decltype(argList)...);
         return (*static_cast<Fn**>(thisptr))[IIdx](thisptr, argList...);
     }
+
+    static uintptr_t** getVFT(uintptr_t vft) {
+        int VFToffset = *reinterpret_cast<int *>(vft + 3);
+        uintptr_t **Table = reinterpret_cast<uintptr_t **>(vft + VFToffset + 7);
+        return Table;
+    }
 };

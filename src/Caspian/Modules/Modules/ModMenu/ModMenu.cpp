@@ -41,3 +41,11 @@ void ModMenu::RenderModMenu() {
 void ModMenu::CurrSettingScroll(float amount) {
 	ModuleMgr.GetModuleList()[CurrModSetting]->SettingPos += amount;
 }
+
+bool ModMenu::canClose() {
+	for (auto m : ModuleMgr.GetModuleList()) {
+		if (m.second->AnyActiveKeybind()) return false;
+	}
+
+	return true;
+}
