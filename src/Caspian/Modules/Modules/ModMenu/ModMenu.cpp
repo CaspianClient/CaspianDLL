@@ -7,7 +7,6 @@ ImColor col = ImColor(23, 245, 89, 255);
 void ModMenu::RenderModMenu() {
 	SizeComponent MenuSize(.9, .6);
 	Vec2 MenuPos = Utils::CenterRect(PositionComponent(1, 1), MenuSize);
-	//RndrUtils.RoundedShadows(MenuPos, MenuSize, ImColor(50, 50, 50, 255), 0, Client::WindowSize.y * 0.1);
 	RndrUtils.RoundedRectFilled(MenuPos, MenuSize, ImColor(40, 40, 40));
 
 	SizeComponent InnerRectSize(.88, .58);
@@ -19,6 +18,35 @@ void ModMenu::RenderModMenu() {
 	Vec2 ModuleRectPos = Utils::CenterRect(PositionComponent(1, 1), ModuleRectSizeDecoy);
 	ModuleRectPos.y += Client::WindowSize.y * 0.1;
 	RndrUtils.RoundedRectFilled(ModuleRectPos, ModuleRectSize, ImColor(40, 40, 40));
+
+	SizeComponent ModButtonSize(0.18, 0.06);
+	SizeComponent SettingButtonSize(0.18, 0.06);
+	float Spacing = SizeComponent(0.03, 0).x;
+
+	Vec2 TotalButtonSizing = Vec2(ModButtonSize.x + Spacing + SettingButtonSize.x, SettingButtonSize.y);
+
+	Vec2 ButtonsCentered = Utils::CenterRect(Vec2(ModuleRectSize.x, ModuleRectPos.y - InnerRectPos.y), TotalButtonSizing, InnerRectPos);
+
+	ButtonsCentered.x = ModuleRectPos.x;
+
+	Vec2 ModButtonPos = ButtonsCentered;
+
+	Vec2 SettingButtonPos = (ButtonsCentered + TotalButtonSizing) - SettingButtonSize;
+
+	RndrUtils.RoundedRectFilled(ModButtonPos, ModButtonSize, CurrModSetting == "" ? ImColor(120, 120, 120) : ImColor(100, 100, 100));
+	RndrUtils.RoundedRectBorder(ModButtonPos, ModButtonSize, CurrModSetting == "" ? ImColor(60, 60, 60) : ImColor(140, 140, 140), Spacing/8);
+	RndrUtils.Text(ModButtonPos, ModButtonSize, IM_COL32_WHITE, "Modules", .45, 2);
+	Utils::onButtonClick(ModButtonPos, ModButtonSize, [&]() {
+		CurrModSetting = "";
+		});
+
+	RndrUtils.RoundedRectFilled(SettingButtonPos, SettingButtonSize, CurrModSetting != "" ? ImColor(120, 120, 120) : ImColor(100, 100, 100));
+	RndrUtils.RoundedRectBorder(SettingButtonPos, SettingButtonSize, CurrModSetting != "" ? ImColor(60, 60, 60) : ImColor(140, 140, 140), Spacing/8);
+	RndrUtils.Text(SettingButtonPos, SettingButtonSize, IM_COL32_WHITE, "Settings", .45, 2);
+	Utils::onButtonClick(SettingButtonPos, SettingButtonSize, [&]() {
+		if (CurrModSetting == "")
+			CurrModSetting = this->getName();
+		});
 
 	SizeComponent ModCardSpacing(.01, .01);
 	ModuleRectPos.x += ModCardSpacing.x;
@@ -36,6 +64,8 @@ void ModMenu::RenderModMenu() {
 			RenderModcard(x.second, ModuleRectPos);
 			ModuleRectPos.y += Client::WindowSize.y * 0.09;
 		}
+
+
 }
 
 void ModMenu::CurrSettingScroll(float amount) {
