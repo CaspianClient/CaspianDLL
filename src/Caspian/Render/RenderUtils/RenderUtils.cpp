@@ -282,8 +282,11 @@ void RenderUtils::Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::
 		SetupFonts();
 	}
 
-	ImGui::PushFont(FontList[Font]);
 	float fSize = FontSize * Client::WindowSize.y / 1080;
+
+	if (fSize <= 0) return;
+
+	ImGui::PushFont(FontList[Font]);
 
 	ImGui::SetWindowFontScale(fSize);
 
