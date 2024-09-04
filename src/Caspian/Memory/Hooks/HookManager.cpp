@@ -4,6 +4,7 @@
 #include "Hooks/GetFOV.hpp"
 #include "Hooks/SetupAndRender.hpp"
 #include "Hooks/ActorBaseTick.hpp"
+#include "Hooks/getGamma.hpp"
 
 std::vector<Hook*> HookManager::Hooks = {};
 
@@ -14,4 +15,5 @@ void HookManager::InitializeHooks() {
 	Hooks.push_back(new GetFOV());
 	Hooks.push_back(new SetupAndRender());
 	Hooks.push_back(new ActorBaseTick());
+	Hooks.push_back(new GetGamma());
 }
