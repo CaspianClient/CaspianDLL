@@ -38,6 +38,7 @@ void ModMenu::RenderModMenu() {
 	RndrUtils.Text(ModButtonPos, ModButtonSize, IM_COL32_WHITE, "Modules", .45, 2);
 	Utils::onButtonClick(ModButtonPos, ModButtonSize, [&]() {
 		CurrModSetting = "";
+		SettingScrollAmount = 0;
 		});
 
 	RndrUtils.RoundedRectFilled(SettingButtonPos, SettingButtonSize, CurrModSetting != "" ? ImColor(120, 120, 120) : ImColor(100, 100, 100));
@@ -45,25 +46,27 @@ void ModMenu::RenderModMenu() {
 	RndrUtils.Text(SettingButtonPos, SettingButtonSize, IM_COL32_WHITE, "Settings", .45, 2);
 	Utils::onButtonClick(SettingButtonPos, SettingButtonSize, [&]() {
 		if (CurrModSetting == "")
+			SettingScrollAmount = 0;
 			CurrModSetting = this->getName();
 		});
 
-	SizeComponent ModCardSpacing(.01, .01);
+	SizeComponent ModCardSpacing(.01, .01 + SettingScrollAmount);
 	ModuleRectPos.x += ModCardSpacing.x;
 	ModuleRectPos.y += ModCardSpacing.y;
+	RndrUtils.PushClipRect(ModuleRectPos - ModCardSpacing, ModuleRectSize);
 	if (CurrModSetting != "") {
-		RndrUtils.PushClipRect(ModuleRectPos - ModCardSpacing, ModuleRectSize);
 		auto mod = ModuleMgr.GetModuleList()[CurrModSetting];
 		mod->RenderSettings();
 		mod->SettingPos = SettingScrollAmount;
-		RndrUtils.PopClipRect();
 	}
-	else
+	else {
 		for (auto x : ModuleMgr.GetModuleList()) {
 			if (x.first == this->getName()) continue;
 			RenderModcard(x.second, ModuleRectPos);
 			ModuleRectPos.y += Client::WindowSize.y * 0.09;
 		}
+	}
+	RndrUtils.PopClipRect();
 
 
 }

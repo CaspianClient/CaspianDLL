@@ -52,13 +52,11 @@ public:
 			event.mCancel = true;
 
 			if (event.button == MouseButton::Scroll) {
-				if (CurrModSetting != "") {
-					if (event.action == MouseAction::SCROLL_UP) {
-						SettingScrollAmount += 0.05;
-					}
-					else {
-						SettingScrollAmount += -0.05;
-					}
+				if (event.action == MouseAction::SCROLL_UP) {
+					SettingScrollAmount += 0.025;
+				}
+				else {
+					SettingScrollAmount += -0.025;
 				}
 			}
 		}
@@ -67,7 +65,5 @@ public:
 	std::function<void(RenderEvent&)> renderEvent = [&](RenderEvent& event) {
 		if (this->get<bool>("enabled"))
 			RenderModMenu();
-		if (CurrModSetting == "")
-			SettingScrollAmount = 0;
 	};
 };

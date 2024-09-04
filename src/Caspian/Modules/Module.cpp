@@ -56,45 +56,45 @@ void Module::AddSlider(std::string Setting, std::string DisplayName, float min, 
 
 void Module::AddColorPicker(std::string Setting, std::string DisplayName) {
 	SizeComponent ModuleRectSizeDecoy(.86, .56);
-	Vec2 ModuleRectPos = Utils::CenterRect(PositionComponent(1, 1), ModuleRectSizeDecoy);
+	Vec2 ModulePos = Utils::CenterRect(PositionComponent(1, 1), ModuleRectSizeDecoy);
 	if (SettingPos >= .46) return;
-	ModuleRectPos.y += Client::WindowSize.y * (0.12 + SettingPos);
-	ModuleRectPos.x += Client::WindowSize.y * 0.017;
+	ModulePos.y += Client::WindowSize.y * 0.12;
+	ModulePos.x += Client::WindowSize.y * 0.017;
+	float ScrollModifier = Client::WindowSize.y * SettingPos;
+
+	Vec2 pos = ModulePos;
+	pos.y += ScrollModifier;
 
 	std::vector<float> value = get<std::vector<float>>(Setting);
 
 	ImColor col = RndrUtils.VecToImcolor(value);
 
 	SizeComponent colorRect(.03, .03);
-	SizeComponent AlphabarIMG(0.27, 0.18);
 
-	RndrUtils.SetCurrentDrawList(BackGround);
-	RndrUtils.PushClipRect(ModuleRectPos, colorRect);
-    RndrUtils.RenderImage(ModuleRectPos, AlphabarIMG, "Transparent", IM_COL32_WHITE);
-    RndrUtils.PopClipRect();
-    RndrUtils.RoundedRectFilled(ModuleRectPos, colorRect, col);
+    RndrUtils.RenderImage(pos, colorRect, "TransparentRect", IM_COL32_WHITE);
+    RndrUtils.RoundedRectFilled(pos, colorRect, col);
 
-	Vec2 TextPos = ModuleRectPos;
+	Vec2 TextPos = pos;
 
 	TextPos.x += Client::WindowSize.y * 0.038;
 
 	RndrUtils.Text(TextPos, Vec2(0, colorRect.y), IM_COL32_WHITE, DisplayName, .35, 1);
 
-	if (Utils::MouseInRect(ModuleRectPos, colorRect) and Client::MouseClickLeft) {
+	if (Utils::MouseInRect(pos, colorRect) and Client::MouseClickLeft) {
 		if(!ColorPicker[Setting])
 			ColorPicker[Setting] = true;
 	}
 
 	SizeComponent Pickerbackground(0.45, 0.35);
 
-	if (!Utils::MouseInRect(ModuleRectPos, Pickerbackground) and Client::MouseClickLeft) {
+	if (!Utils::MouseInRect(pos, Pickerbackground) and Client::MouseClickLeft) {
 		if(ColorPicker[Setting])
 			ColorPicker[Setting] = false;
 	}
 
 	if (ColorPicker[Setting]) {
 		RndrUtils.SetCurrentDrawList(ForeGround);
-		SettingsMenu::ColorPicker(ModuleRectPos, col);
+		SettingsMenu::ColorPicker(pos, col);
 		RndrUtils.SetCurrentDrawList(BackGround);
 		set(Setting, RndrUtils.ImcolorToVec(col));
 		SettingPos += 0.35;

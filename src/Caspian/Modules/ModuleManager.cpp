@@ -7,6 +7,7 @@
 #include "Modules/Keystrokes.hpp"
 #include "Modules/Clock.hpp"
 #include "Modules/ToggleSprint.hpp"
+#include "Modules/CPS.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -19,6 +20,7 @@ void ModuleManager::IntializeModules() {
 	AddModule(new Keystrokes());
 	AddModule(new Clock());
 	AddModule(new ToggleSprint());
+	AddModule(new CPS());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {

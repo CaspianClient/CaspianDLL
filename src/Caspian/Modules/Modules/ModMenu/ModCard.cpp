@@ -24,6 +24,7 @@ void ModMenu::RenderModcard(Module* mod, Vec2 pos) {
 	RndrUtils.RenderImage(SettingPos, SettingSize, "Settings", ImColor(60, 60, 60));
 
 	Utils::onButtonClick(SettingPos, SettingSize, [&]() {
+		SettingScrollAmount = 0;
 		this->CurrModSetting = mod->getName();
 		});
 }

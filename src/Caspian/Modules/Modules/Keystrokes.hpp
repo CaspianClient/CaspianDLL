@@ -9,7 +9,7 @@ class Keystrokes : public Module {
 public:
 	Keystrokes() : Module("Keystokes", "Shows your Keystrokes")
 	{
-		this->set("enabled", true, false);
+		this->set("enabled", false, false);
 		this->set("posX", 0, false);
 		this->set("posY", 0, false);
 		this->set("Size", 1, false);

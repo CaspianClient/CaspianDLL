@@ -5,6 +5,7 @@
 #include "Resources/monkey.h"
 #include "Resources/Settings.h"
 #include "Resources/Transparent.h"
+#include "Resources/TransparentRect.hpp"
 
 void ResourceManager::LoadResources() {
 	Resources["PoppinsFont"] = Resource(PoppinsFont, PoppinsFont_size);
@@ -13,6 +14,7 @@ void ResourceManager::LoadResources() {
 	Resources["monke"] = Resource(monke, monke_size);
 	Resources["Settings"] = Resource(settings, settings_size);
 	Resources["Transparent"] = Resource(Transparent, Transparent_size);
+	Resources["TransparentRect"] = Resource(TransparentRect, TransparentRect_size);
 }
 
 Resource ResourceManager::getResource(std::string name) {
