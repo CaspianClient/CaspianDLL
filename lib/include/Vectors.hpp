@@ -1,5 +1,7 @@
 #pragma once
 #include "../../src/Caspian/Render/ImGUI/imgui.h"
+#include <math.h>
+#include <cmath>
 
 class Vec2 : public ImVec2 {
 public:
@@ -41,5 +43,9 @@ public:
 		this->x = x;
 		this->y = y;
 		this->z = z;
+	}
+
+	float GetDistance(Vec3 vec) {
+		return sqrt(std::pow(vec.x - this->x, 2) + std::pow(vec.y - this->y, 2) + std::pow(vec.z - this->z, 2));
 	}
 };

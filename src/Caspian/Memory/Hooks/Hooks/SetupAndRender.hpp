@@ -18,6 +18,9 @@ public:
 
 		SDK::CI = mcuirc->getclientInstance();
 		SDK::TopLayer = (a1->TopLayer() != "toast_screen" and a1->TopLayer() != "debug_screen" ? a1->TopLayer() : SDK::TopLayer);
+
+		nes::event_holder<SetupAndRenderEvent> event;
+		EventDispatcher.trigger(event);
 		
 		return func_original(a1, mcuirc);
 	}

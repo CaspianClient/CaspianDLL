@@ -5,5 +5,6 @@
 #include "EventTypes/OtherEvents.hpp"
 #include "EventTypes/RenderEvent.hpp"
 #include "EventTypes/TickEvent.hpp"
+#include "EventTypes//SetupAndRenderEvent.hpp"
 
 extern nes::event_dispatcher EventDispatcher;

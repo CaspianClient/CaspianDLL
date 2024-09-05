@@ -9,6 +9,8 @@
 #include "Modules/ToggleSprint.hpp"
 #include "Modules/CPS.hpp"
 #include "Modules/Fullbright.hpp"
+#include "Modules/FreeLook.hpp"
+#include "Modules/SpeedDisplay.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -23,6 +25,8 @@ void ModuleManager::IntializeModules() {
 	AddModule(new ToggleSprint());
 	AddModule(new CPS());
 	AddModule(new Fullbright());
+	AddModule(new FreeLook());
+	AddModule(new SpeedDisplay());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {

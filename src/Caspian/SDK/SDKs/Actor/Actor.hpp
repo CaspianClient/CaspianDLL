@@ -2,6 +2,9 @@
 #include "../../../Memory/Memory.hpp"
 #include "../../../Memory/Signatures/SigManager.hpp"
 #include "Components/MoveInputComponent.hpp"
+#include "Components/ActorRotationComponent.hpp"
+#include "Components/ActorHeadRotationComponent.hpp"
+#include "Components/StateVectorComponent.hpp"
 
 class EntityRegistry;
 
@@ -37,6 +40,42 @@ public:
 		}
 
 		return tryGet<MoveInputComponent>(sig);
+
+	}
+
+	ActorRotationComponent* getActorRotationComponent() {
+
+		static  uintptr_t sig;
+
+		if (sig == NULL) {
+			sig = getSig("ActorRotationComponent");
+		}
+
+		return tryGet<ActorRotationComponent>(sig);
+
+	}
+
+	ActorHeadRotationComponent* getActorHeadRotationComponent() {
+
+		static  uintptr_t sig;
+
+		if (sig == NULL) {
+			sig = getSig("ActorHeadRotationComponent");
+		}
+
+		return tryGet<ActorHeadRotationComponent>(sig);
+
+	}
+
+	StateVectorComponent* getStateVectorComponent() {
+
+		static  uintptr_t sig;
+
+		if (sig == NULL) {
+			sig = getSig("StateVectorComponent");
+		}
+
+		return tryGet<StateVectorComponent>(sig);
 
 	}
 };
