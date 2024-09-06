@@ -12,3 +12,8 @@ public:
 
 class ActorIntersectsEvent {
 };
+
+class GetPerspectiveEvent {
+public:
+	int perspective;
+};

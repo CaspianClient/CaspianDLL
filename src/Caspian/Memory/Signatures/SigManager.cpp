@@ -24,6 +24,7 @@ void SigManager::IntializeSigs() {
 	AddSig("ActorVFT", "48 8D 05 ? ? ? ? 48 89 01 B8 ? ? ? ? 8D 50 FA 44 8D 48 ? 44 8D 40 ? 66 89 44 ? ? E8 ? ? ? ? 48 8B 8B");
 	AddSig("GetGamma", "48 83 EC 28 80 B9 38 17 00 00 00 48 8D 54 24 30 48 8B 01 48 8B 40 60 74 38 41 B8 19");
 	AddSig("ActorIntersects", "48 83 EC 28 48 8B 81 98 02 00 00 48 85 C0 74 50");
+	AddSig("GetPerspective", "48 83 EC 28 48 8B 01 48 8D 54 24 30 41 B8 03 00");
 	for (auto it = Sigs.begin(); it != Sigs.end(); ++it) {
 		ScannedSigs[it->first] = Memory::ScanSig(it->second);
 	}

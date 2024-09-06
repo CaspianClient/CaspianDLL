@@ -16,6 +16,7 @@ public:
 	{
 		EventDispatcher.listen<KeyboardEvent>(KeyEvent);
 		EventDispatcher.listen<ActorIntersectsEvent>(actorIntersectsEvent);
+		EventDispatcher.listen<GetPerspectiveEvent>(getPerspectiveEvent);
 
 		this->set("enabled", false, false);
 		this->set("keybind", 86, false);
@@ -53,6 +54,14 @@ public:
 			auto HeadRotationComp = SDK::CI->getLocalPlayer()->getActorHeadRotationComponent();
 			RotationComp->Rot = OriginalRot;
 			HeadRotationComp->Rot = OriginalHeadRot;
+		}
+	};
+
+	std::function<void(GetPerspectiveEvent &)> getPerspectiveEvent = [&](GetPerspectiveEvent &event)
+	{
+		if (this->get<bool>("enabled") and EnableFreeLook and SDK::TopLayer == "hud_screen")
+		{
+			event.perspective = 1;
 		}
 	};
 };
