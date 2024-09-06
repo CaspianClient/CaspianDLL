@@ -17,7 +17,7 @@ public:
 		EventDispatcher.listen<GetFOVevent>(getFovEvent);
 		EventDispatcher.listen<MouseScrollEvent>(mScrollEvent);
 
-		this->set("enabled", true, false);
+		this->set("enabled", false, false);
 		this->set("keybind", 67, false);
 	}
 

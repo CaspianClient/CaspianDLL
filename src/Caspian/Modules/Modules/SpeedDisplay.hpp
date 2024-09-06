@@ -8,8 +8,8 @@ public:
 		this->set("posX", 0, false);
 		this->set("posY", 0, false);
 		this->set("Size", 1, false);
-		this->set("BGcolor", std::vector<float>{0, 0, 0, .5f});
-		this->set("TEXTcolor", std::vector<float>{1, 1, 1, 1});
+		this->set("BGcolor", std::vector<float>{0, 0, 0, .5f}, false);
+		this->set("TEXTcolor", std::vector<float>{1, 1, 1, 1}, false);
 
 		EventDispatcher.listen<RenderEvent>(renderEvent);
 		EventDispatcher.listen<TickEvent>(tickEvent);

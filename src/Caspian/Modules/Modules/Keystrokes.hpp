@@ -14,10 +14,10 @@ public:
 		this->set("posY", 0, false);
 		this->set("Size", 1, false);
 		this->set("anim", 1, false);
-		this->set("BGcolorDisabled", std::vector<float>{0, 0, 0, .5f});
-		this->set("TEXTcolorDisabled", std::vector<float>{1, 1, 1, 1});
-		this->set("BGcolorEnabled", std::vector<float>{1, 1, 1, .5f});
-		this->set("TEXTcolorEnabled", std::vector<float>{1, 1, 1, 1});
+		this->set("BGcolorDisabled", std::vector<float>{0, 0, 0, .5f}, false);
+		this->set("TEXTcolorDisabled", std::vector<float>{1, 1, 1, 1}, false);
+		this->set("BGcolorEnabled", std::vector<float>{1, 1, 1, .5f}, false);
+		this->set("TEXTcolorEnabled", std::vector<float>{1, 1, 1, 1}, false);
 
 		resetButtonStates();
 

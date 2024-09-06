@@ -11,6 +11,7 @@
 #include "Modules/Fullbright.hpp"
 #include "Modules/FreeLook.hpp"
 #include "Modules/SpeedDisplay.hpp"
+#include "Modules/SnapLook.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -27,6 +28,7 @@ void ModuleManager::IntializeModules() {
 	AddModule(new Fullbright());
 	AddModule(new FreeLook());
 	AddModule(new SpeedDisplay());
+	AddModule(new SnapLook());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {
