@@ -5,6 +5,7 @@
 #include "Hooks/SetupAndRender.hpp"
 #include "Hooks/ActorBaseTick.hpp"
 #include "Hooks/getGamma.hpp"
+#include "Hooks/ActorIntersects.hpp"
 
 std::vector<Hook*> HookManager::Hooks = {};
 
@@ -16,4 +17,5 @@ void HookManager::InitializeHooks() {
 	Hooks.push_back(new SetupAndRender());
 	Hooks.push_back(new ActorBaseTick());
 	Hooks.push_back(new GetGamma());
+	Hooks.push_back(new ActorIntersects());
 }

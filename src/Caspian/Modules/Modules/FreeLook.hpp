@@ -15,7 +15,7 @@ public:
 	FreeLook() : Module("FreeLook", "FreeLook")
 	{
 		EventDispatcher.listen<KeyboardEvent>(KeyEvent);
-		EventDispatcher.listen<SetupAndRenderEvent>(setupAndRenderEvent);
+		EventDispatcher.listen<ActorIntersectsEvent>(actorIntersectsEvent);
 
 		this->set("enabled", false, false);
 		this->set("keybind", 86, false);
@@ -45,7 +45,7 @@ public:
 			};
 	};
 
-	std::function<void(SetupAndRenderEvent &)> setupAndRenderEvent = [&](SetupAndRenderEvent &event)
+	std::function<void(ActorIntersectsEvent &)> actorIntersectsEvent = [&](ActorIntersectsEvent &event)
 	{
 		if (this->get<bool>("enabled") and EnableFreeLook and SDK::TopLayer == "hud_screen")
 		{

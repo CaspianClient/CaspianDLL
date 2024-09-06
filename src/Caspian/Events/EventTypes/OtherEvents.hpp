@@ -9,3 +9,6 @@ class GetGammaEvent {
 public:
 	float gamma;
 };
+
+class ActorIntersectsEvent {
+};
