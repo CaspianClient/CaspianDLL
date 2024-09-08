@@ -1,6 +1,7 @@
 #include "Module.hpp"
 #include "../Render/RenderUtils/SettingsMenu/SettingsMenu.hpp"
 #include "../SDK/SDK.hpp"
+#include "ModuleManager.hpp"
 
 void Module::RenderHud(const std::string text) {
 	if (!this->get<bool>("enabled") or SDK::TopLayer != "hud_screen") {
@@ -16,6 +17,32 @@ void Module::RenderHud(const std::string text) {
 
 	RndrUtils.RoundedRectFilled(pos, size, RndrUtils.VecToImcolor(get<std::vector<float>>("BGcolor")), 0);
 	RndrUtils.Text(pos, size, RndrUtils.VecToImcolor(get<std::vector<float>>("TEXTcolor")), text, .35 * Size, 2);
+}
+
+void Module::handleDragging(Vec2& pos, const Vec2& totalModuleSize) {
+    if (Utils::MouseInRect(pos, totalModuleSize)) {
+        if (Client::MouseHoldLeft && !isDragging) {
+            for(auto x : ModuleMgr.GetModuleList()){
+                if (x.second->isDragging)
+                    return;
+            }
+            isDragging = true;
+            CursorPosHeld = Vec2(Client::MousePos.x - pos.x, Client::MousePos.y - pos.y);
+        }
+    }
+
+    if (!Client::MouseHoldLeft)
+        isDragging = false;
+
+    if (isDragging) {
+        pos.x = Client::MousePos.x - CursorPosHeld.x;
+        pos.y = Client::MousePos.y - CursorPosHeld.y;
+
+        Utils::RectClippingOutside(pos, totalModuleSize);
+
+        set("posX", pos.x / Client::WindowSize.x);
+        set("posY", pos.y / Client::WindowSize.y);
+    }
 }
 
 void Module::AddToggle(std::string Setting, std::string DisplayName) {

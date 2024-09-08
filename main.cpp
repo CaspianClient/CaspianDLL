@@ -16,7 +16,7 @@ using namespace winrt::Windows::UI::Popups;
 using namespace winrt::Windows::Data::Xml::Dom;
 
 DWORD WINAPI initialize(HMODULE instance) {
-    if (GetConsoleWindow() == nullptr and true) {
+    if (GetConsoleWindow() == nullptr and false) {
         AllocConsole();
         SetConsoleTitleA("Caspian-Debug");
         FILE *out;

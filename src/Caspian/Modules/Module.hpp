@@ -29,27 +29,7 @@ public:
 		return false;
 	}
 
-	void handleDragging(Vec2& pos, const Vec2& totalModuleSize) {
-        if (Utils::MouseInRect(pos, totalModuleSize)) {
-            if (Client::MouseHoldLeft && !isDragging) {
-                isDragging = true;
-                CursorPosHeld = Vec2(Client::MousePos.x - pos.x, Client::MousePos.y - pos.y);
-            }
-        }
-
-        if (!Client::MouseHoldLeft)
-            isDragging = false;
-
-        if (isDragging) {
-            pos.x = Client::MousePos.x - CursorPosHeld.x;
-            pos.y = Client::MousePos.y - CursorPosHeld.y;
-
-            Utils::RectClippingOutside(pos, totalModuleSize);
-
-            set("posX", pos.x / Client::WindowSize.x);
-            set("posY", pos.y / Client::WindowSize.y);
-        }
-    }
+	void handleDragging(Vec2& pos, const Vec2& totalModuleSize);
 
 	template<typename T>
     T get(const std::string& key) const {

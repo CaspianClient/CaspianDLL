@@ -12,7 +12,8 @@ class Logger {
 	static inline std::ofstream logFile = std::ofstream();
 
     static void log(const std::string& level, const std::string& message) {
-        printf((level + ": " + message + "\n").c_str());
+        std::cout << level + ": " + message << std::endl;
+        //printf((level + ": " + message + "\n").c_str());
         if (logFile.is_open()) {
             logFile << level << ": " << message << std::endl;
             logFile.flush();

@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <MinHook.h>
 #include <format>
+#include "../Logger/Logger.hpp"
 
 template <typename Ret, typename Type> Ret& direct_access(Type* type, size_t offset) {
     union {
@@ -37,15 +38,15 @@ public:
 
 	static void hookFunc(void* pTarget, void* pDetour, void** ppOriginal, std::string name) {
         if (pTarget == NULL) {
-            printf(std::format("{} has invalid address\n", name).c_str());
+            Logger::error(std::format("{} has invalid address", name).c_str());
             return;
         }
         if (MH_CreateHook(pTarget, pDetour, ppOriginal) != MH_OK) {
-            printf(std::format("Failed to hook {} function\n", name).c_str());
+            Logger::error(std::format("Failed to hook {} function", name).c_str());
             return;
         }
         MH_EnableHook(pTarget);
-        printf(std::format("Successfully hooked {} function at {}\n", name, pTarget).c_str());
+        Logger::info(std::format("Successfully hooked {} function at {}", name, pTarget).c_str());
     }
 
     template <unsigned int IIdx, typename TRet, typename... TArgs>
