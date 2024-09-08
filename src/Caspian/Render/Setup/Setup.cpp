@@ -82,6 +82,7 @@ void SetupImGUI::InitImGUI() {
 			ppContext->Release();
 		}
 		else if (d3d12Device) {
+            d3d12Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 			ImGui_ImplWin32_Init(window);
 			ImGui_ImplDX12_Init(d3d12Device, buffersCounts,
 				DXGI_FORMAT_R8G8B8A8_UNORM, d3d12DescriptorHeapImGuiRender,
@@ -121,7 +122,11 @@ void SetupImGUI::RenderDX11(IDXGISwapChain3* ppSwapChain) {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	RenderFrame();
+    nes::event_holder<RenderEvent> event;
+    event->swapChain = ppSwapChain;
+    event->deviceType = DeviceType::DX11;
+    event->Dx11Device = d3d11Device;
+    EventDispatcher.trigger(event);
 
 	ImGui::EndFrame();
 	ImGui::Render();
@@ -194,12 +199,19 @@ void SetupImGUI::RenderDX12(IDXGISwapChain3* ppSwapChain) {
 
 	InitImGUI();
 
+	incrementFence();
+
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	RenderFrame();
-
+    nes::event_holder<RenderEvent> event;
+    event->swapChain = ppSwapChain;
+    event->deviceType = DeviceType::DX12;
+    event->Dx12Device = d3d12Device;
+    event->CommandList = d3d12CommandList;
+    event->CommandQueue = d3d12CommandQueue;
+    EventDispatcher.trigger(event);
 
 	frameContexts[ppSwapChain->GetCurrentBackBufferIndex()].commandAllocator->Reset();;
 

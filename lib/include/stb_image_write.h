@@ -159,7 +159,7 @@ LICENSE
 #define STBIWDEF  static
 #else
 #ifdef __cplusplus
-#define STBIWDEF  "C"
+#define STBIWDEF  extern "C"
 #else
 #define STBIWDEF  extern
 #endif
@@ -288,12 +288,12 @@ static void stbi__stdio_write(void *context, void *data, int size)
 
 #if defined(_WIN32) && defined(STBIW_WINDOWS_UTF8)
 #ifdef __cplusplus
-#define STBIW_"C"
+#define STBIW_EXTERN extern "C"
 #else
-#define STBIW_extern
+#define STBIW_EXTERN extern
 #endif
-STBIW___declspec(dllimport) int __stdcall MultiByteToWideChar(unsigned int cp, unsigned long flags, const char *str, int cbmb, wchar_t *widestr, int cchwide);
-STBIW___declspec(dllimport) int __stdcall WideCharToMultiByte(unsigned int cp, unsigned long flags, const wchar_t *widestr, int cchwide, char *str, int cbmb, const char *defchar, int *used_default);
+STBIW_EXTERN __declspec(dllimport) int __stdcall MultiByteToWideChar(unsigned int cp, unsigned long flags, const char *str, int cbmb, wchar_t *widestr, int cchwide);
+STBIW_EXTERN __declspec(dllimport) int __stdcall WideCharToMultiByte(unsigned int cp, unsigned long flags, const wchar_t *widestr, int cchwide, char *str, int cbmb, const char *defchar, int *used_default);
 
 STBIWDEF int stbiw_convert_wchar_to_utf8(char *buffer, size_t bufferlen, const wchar_t* input)
 {
