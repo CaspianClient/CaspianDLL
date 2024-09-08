@@ -13,6 +13,7 @@
 #include "Modules/SpeedDisplay.hpp"
 #include "Modules/SnapLook.hpp"
 #include "Modules/EnvironmentChanger.hpp"
+#include "Modules/PingDisplay.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -31,6 +32,7 @@ void ModuleManager::IntializeModules() {
 	AddModule(new SpeedDisplay());
 	AddModule(new SnapLook());
     AddModule(new EnvironmentChanger());
+    AddModule(new PingDisplay());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {

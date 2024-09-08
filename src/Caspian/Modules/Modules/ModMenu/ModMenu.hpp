@@ -34,7 +34,9 @@ public:
 		if (event.key == this->get<int>("keybind") and event.state) {
 			if (!canClose())
 				return;
-			this->set("enabled", !this->get<bool>("enabled"));
+            if (SDK::TopLayer == "hud_screen" and !this->get<bool>("enabled"))
+			    this->set("enabled", true);
+            else this->set("enabled", false);
 			if (SDK::CI and SDK::TopLayer == "hud_screen") {
 				if (this->get<bool>("enabled")) {
 					SDK::CI->ReleaseMouse();

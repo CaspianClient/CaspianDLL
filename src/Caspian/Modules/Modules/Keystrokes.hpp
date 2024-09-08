@@ -60,7 +60,7 @@ public:
     }
 
 	std::function<void(RenderEvent&)> renderEvent = [&](RenderEvent& event) {
-		if (!get<bool>("enabled"))
+		if (!this->get<bool>("enabled") or SDK::TopLayer != "hud_screen")
 			return;
 
 		if (!SDK::CI)

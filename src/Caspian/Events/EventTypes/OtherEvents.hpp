@@ -22,3 +22,8 @@ class GetTimeOfDayEvent {
 public:
     float time;
 };
+
+class GetAveragePingEvent {
+public:
+	int ping;
+};

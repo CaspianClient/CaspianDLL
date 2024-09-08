@@ -26,6 +26,7 @@ void SigManager::IntializeSigs() {
 	AddSig("ActorIntersects", "48 83 EC 28 48 8B 81 98 02 00 00 48 85 C0 74 50");
 	AddSig("GetPerspective", "48 83 EC 28 48 8B 01 48 8D 54 24 30 41 B8 03 00");
     AddSig("DimensionGetDayTime", "48 89 5C 24 18 57 48 83 EC 30 48 8B F9 0F 29 74 24 20 48 8B 89 C0 00 00 00");
+	AddSig("GetAveragePing", "48 81 EC C8 00 00 00 4C 8B D1 48 8D 4C 24 20 E8 ?? ?? ?? ?? 48 8B D0 45 33 C0 45 33 C9 49 8B CA E8 ?? ?? ?? ?? 4C 8B C0");
 	for (auto it = Sigs.begin(); it != Sigs.end(); ++it) {
 		ScannedSigs[it->first] = Memory::ScanSig(it->second);
 	}
