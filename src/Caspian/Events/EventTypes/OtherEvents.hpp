@@ -17,3 +17,8 @@ class GetPerspectiveEvent {
 public:
 	int perspective;
 };
+
+class GetTimeOfDayEvent {
+public:
+    float time;
+};

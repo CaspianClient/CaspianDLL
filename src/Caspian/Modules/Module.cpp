@@ -28,7 +28,7 @@ void Module::AddToggle(std::string Setting, std::string DisplayName) {
 	SettingsMenu::Toggle(ModuleRectPos, value, 1.3);
 	this->set(Setting, value);
 
-	ModuleRectPos.x += Client::WindowSize.y * 0.065;
+	ModuleRectPos.x += Client::WindowSize.y * 0.07;
 	float ButtonYsize = Client::WindowSize.y * 0.02;
 	RndrUtils.Text(ModuleRectPos, Vec2(0, ButtonYsize), IM_COL32_WHITE, DisplayName, .35, 1);
 
