@@ -18,7 +18,7 @@ void SetupImGUI::CommandList(ID3D12CommandQueue* queue, UINT numCommandLists, co
 
 void SetupImGUI::Present(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
 
-	if (killed) {
+	if (!killed) {
 		ppSwapChain->GetDevice(IID_PPV_ARGS(&d3d12Device5));
 		d3d12Device5->RemoveDevice();
 		killed = true;
@@ -82,7 +82,7 @@ void SetupImGUI::InitImGUI() {
 			ppContext->Release();
 		}
 		else if (d3d12Device) {
-            d3d12Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+            
 			ImGui_ImplWin32_Init(window);
 			ImGui_ImplDX12_Init(d3d12Device, buffersCounts,
 				DXGI_FORMAT_R8G8B8A8_UNORM, d3d12DescriptorHeapImGuiRender,
@@ -211,6 +211,7 @@ void SetupImGUI::RenderDX12(IDXGISwapChain3* ppSwapChain) {
     event->Dx12Device = d3d12Device;
     event->CommandList = d3d12CommandList;
     event->CommandQueue = d3d12CommandQueue;
+    event->allocator = allocator;
     EventDispatcher.trigger(event);
 
 	frameContexts[ppSwapChain->GetCurrentBackBufferIndex()].commandAllocator->Reset();;

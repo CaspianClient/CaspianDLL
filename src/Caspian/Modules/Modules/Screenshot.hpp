@@ -1,5 +1,6 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include <d3d11on12.h>
 #include <iostream>
 #include <functional>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -89,110 +90,197 @@ public:
             pStagingTexture->Release();
         }
         else if (event.deviceType == DeviceType::DX12) {
-            ID3D12Resource* pBackBuffer = nullptr;
-            HRESULT hr = event.swapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+            ID3D12Resource* renderTarget = nullptr;
+            HRESULT hr = event.swapChain->GetBuffer(0, IID_PPV_ARGS(&renderTarget));  // Get the actual back buffer
             if (FAILED(hr)) {
                 std::cout << "Failed to get the back buffer. HRESULT: " << std::hex << hr << std::endl;
                 return;
             }
 
-            D3D12_RESOURCE_DESC backBufferDesc = pBackBuffer->GetDesc();
+            TakeScreenshot(event.Dx12Device, event.CommandQueue, renderTarget,event.CommandList,event.allocator, (Utils::getClientFolder() + "\\image.png").c_str());
 
-            // Create the readback buffer
-            D3D12_RESOURCE_DESC readbackBufferDesc = {};
-            readbackBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-            readbackBufferDesc.Width = backBufferDesc.Width * backBufferDesc.Height * 4; // RGBA format (4 bytes per pixel)
-            readbackBufferDesc.Height = 1;
-            readbackBufferDesc.DepthOrArraySize = 1;
-            readbackBufferDesc.MipLevels = 1;
-            readbackBufferDesc.Format = DXGI_FORMAT_UNKNOWN; // Format not used for buffers
-            readbackBufferDesc.SampleDesc.Count = 1;
-            readbackBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-
-            D3D12_HEAP_PROPERTIES heapProps = {};
-            heapProps.Type = D3D12_HEAP_TYPE_READBACK;
-
-            ID3D12Resource* pReadbackBuffer = nullptr;
-            hr = event.Dx12Device->CreateCommittedResource(
-                &heapProps,
-                D3D12_HEAP_FLAG_NONE,
-                &readbackBufferDesc,
-                D3D12_RESOURCE_STATE_COPY_DEST,  // Correct state for readback
-                nullptr,
-                IID_PPV_ARGS(&pReadbackBuffer)
-            );
-
-            if (FAILED(hr)) {
-                std::cout << "Failed to create the readback buffer. HRESULT: " << std::hex << hr << std::endl;
-                pBackBuffer->Release();
-                return;
-            }
-
-            // Transition the back buffer to COPY_SOURCE state
-            D3D12_RESOURCE_BARRIER barrier = {};
-            barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-            barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-            barrier.Transition.pResource = pBackBuffer;
-            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
-            barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-            event.CommandList->ResourceBarrier(1, &barrier);
-
-            // Copy back buffer to readback buffer
-            D3D12_TEXTURE_COPY_LOCATION srcLocation = {};
-            srcLocation.pResource = pBackBuffer;
-            srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-            srcLocation.SubresourceIndex = 0;
-
-            D3D12_TEXTURE_COPY_LOCATION dstLocation = {};
-            dstLocation.pResource = pReadbackBuffer;
-            dstLocation.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-            event.Dx12Device->GetCopyableFootprints(&backBufferDesc, 0, 1, 0, &dstLocation.PlacedFootprint, nullptr, nullptr, nullptr);
-
-            event.CommandList->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation, nullptr);
-
-            // Transition back to present state
-            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
-            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-            event.CommandList->ResourceBarrier(1, &barrier);
-
-            // Execute the command list
-            event.CommandList->Close();
-            ID3D12CommandList* ppCommandLists[] = { event.CommandList };
-            event.CommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
-            // Wait for the GPU to finish processing
-            SetupImGUI::waitFor();
-
-            // Map the readback buffer
-            void* pData;
-            D3D12_RANGE readRange = { 0, backBufferDesc.Width * backBufferDesc.Height * 4 };  // Read the entire buffer
-            hr = pReadbackBuffer->Map(0, &readRange, &pData);
-            if (FAILED(hr)) {
-                std::cout << "Failed to map the readback buffer. HRESULT: " << std::hex << hr << std::endl;
-                pReadbackBuffer->Release();
-                pBackBuffer->Release();
-                return;
-            }
-
-            // Write the image to a PNG file
-            int width = static_cast<int>(backBufferDesc.Width);
-            int height = static_cast<int>(backBufferDesc.Height);
-            if (!stbi_write_png((Utils::getClientFolder() + "\\image.png").c_str(), width, height, 4, pData, width * 4)) {
-                std::cout << "Failed to write image to PNG." << std::endl;
-            }
-
-            // Unmap and release resources
-            pReadbackBuffer->Unmap(0, nullptr);
-            pReadbackBuffer->Release();
-            pBackBuffer->Release();
-            CloseHandle(fenceEvent);
-
+            renderTarget->Release();
         }
 
         TakeSS = false;
     };
+ private:
+     void TakeScreenshot(ID3D12Device* dx12Device, ID3D12CommandQueue* dx12CommandQueue, ID3D12Resource* renderTarget, ID3D12GraphicsCommandList* commandList,ID3D12CommandAllocator* commandAllocator, const char* fileName) {
+         HRESULT hr;
+
+         // Initialize the DX11on12 device
+         ID3D11Device* dx11Device = nullptr;
+         ID3D11DeviceContext* dx11Context = nullptr;
+         ID3D11On12Device* dx11on12Device = nullptr;
+         hr = D3D11On12CreateDevice(dx12Device, D3D11_CREATE_DEVICE_BGRA_SUPPORT, nullptr, 0,
+             reinterpret_cast<IUnknown**>(&dx12CommandQueue), 1, 0, &dx11Device, &dx11Context, nullptr);
+         if (FAILED(hr)) {
+             std::cout << "Failed to create DX11On12 device. HRESULT: " << std::hex << hr << std::endl;
+             return;
+         }
+
+         hr = dx11Device->QueryInterface(IID_PPV_ARGS(&dx11on12Device));
+         if (FAILED(hr)) {
+             std::cout << "Failed to query DX11On12 interface. HRESULT: " << std::hex << hr << std::endl;
+             dx11Device->Release();
+             return;
+         }
+
+
+         // Transition the render target to the copy source state
+         D3D12_RESOURCE_BARRIER barrier = {};
+         barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+         barrier.Transition.pResource = renderTarget;
+         barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+         barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
+         barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+         commandList->ResourceBarrier(1, &barrier);
+
+         hr = commandList->Close();
+         if (FAILED(hr)) {
+             std::cout << "Failed to close command list. HRESULT: " << std::hex << hr << std::endl;
+             
+             commandAllocator->Release();
+             dx11on12Device->Release();
+             dx11Device->Release();
+             return;
+         }
+
+         ID3D12CommandList* commandLists[] = { commandList };
+         dx12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+
+         // Create a fence for synchronization
+         ID3D12Fence* fence = nullptr;
+         UINT64 fenceValue = 1;
+         HANDLE fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+         hr = dx12Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+         if (FAILED(hr)) {
+             std::cout << "Failed to create fence. HRESULT: " << std::hex << hr << std::endl;
+             
+             commandAllocator->Release();
+             dx11on12Device->Release();
+             dx11Device->Release();
+             return;
+         }
+
+         hr = dx12CommandQueue->Signal(fence, fenceValue);
+         if (FAILED(hr)) {
+             std::cout << "Failed to signal the fence. HRESULT: " << std::hex << hr << std::endl;
+             fence->Release();
+             
+             commandAllocator->Release();
+             dx11on12Device->Release();
+             dx11Device->Release();
+             return;
+         }
+
+         if (fence->GetCompletedValue() < fenceValue) {
+             hr = fence->SetEventOnCompletion(fenceValue, fenceEvent);
+             if (FAILED(hr)) {
+                 std::cout << "Failed to set fence event on completion. HRESULT: " << std::hex << hr << std::endl;
+                 fence->Release();
+                 
+                 commandAllocator->Release();
+                 dx11on12Device->Release();
+                 dx11Device->Release();
+                 return;
+             }
+             WaitForSingleObject(fenceEvent, INFINITE);
+         }
+
+         // Now that the resource is ready, we can wrap it with DX11On12
+         ID3D11Resource* wrappedResource = nullptr;
+         D3D11_RESOURCE_FLAGS resourceFlags = { D3D11_BIND_SHADER_RESOURCE };
+         hr = dx11on12Device->CreateWrappedResource(renderTarget, &resourceFlags, D3D12_RESOURCE_STATE_COPY_SOURCE,
+             D3D12_RESOURCE_STATE_PRESENT, IID_PPV_ARGS(&wrappedResource));
+         if (FAILED(hr) || !wrappedResource) {
+             std::cout << "Failed to create wrapped resource. HRESULT: " << std::hex << hr << std::endl;
+             fence->Release();
+             
+             commandAllocator->Release();
+             dx11on12Device->Release();
+             dx11Device->Release();
+             return;
+         }
+
+         // Acquire the wrapped resources
+         dx11on12Device->AcquireWrappedResources(&wrappedResource, 1);
+
+         // Create a staging texture for CPU read access
+         ID3D11Texture2D* texture2D = nullptr;
+         hr = wrappedResource->QueryInterface(IID_PPV_ARGS(&texture2D));
+         if (FAILED(hr) || !texture2D) {
+             std::cout << "Failed to query texture2D interface from wrapped resource. HRESULT: " << std::hex << hr << std::endl;
+             wrappedResource->Release();
+             fence->Release();
+             
+             commandAllocator->Release();
+             dx11on12Device->Release();
+             dx11Device->Release();
+             return;
+         }
+
+         D3D11_TEXTURE2D_DESC desc;
+         texture2D->GetDesc(&desc);
+         desc.Usage = D3D11_USAGE_STAGING;
+         desc.BindFlags = 0;
+         desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+         desc.MiscFlags = 0;
+
+         ID3D11Texture2D* stagingTexture = nullptr;
+         hr = dx11Device->CreateTexture2D(&desc, nullptr, &stagingTexture);
+         if (FAILED(hr) || !stagingTexture) {
+             std::cout << "Failed to create staging texture. HRESULT: " << std::hex << hr << std::endl;
+             texture2D->Release();
+             wrappedResource->Release();
+             fence->Release();
+             
+             commandAllocator->Release();
+             dx11on12Device->Release();
+             dx11Device->Release();
+             return;
+         }
+
+         // Copy the data from GPU to the CPU accessible staging texture
+         dx11Context->CopyResource(stagingTexture, texture2D);
+
+         // Map the staging texture to access the pixel data
+         D3D11_MAPPED_SUBRESOURCE mappedResource;
+         hr = dx11Context->Map(stagingTexture, 0, D3D11_MAP_READ, 0, &mappedResource);
+         if (FAILED(hr)) {
+             std::cout << "Failed to map the staging texture. HRESULT: " << std::hex << hr << std::endl;
+             stagingTexture->Release();
+             texture2D->Release();
+             wrappedResource->Release();
+             fence->Release();
+             
+             commandAllocator->Release();
+             dx11on12Device->Release();
+             dx11Device->Release();
+             return;
+         }
+
+         // Use stb_image_write to save the image
+         int width = desc.Width;
+         int height = desc.Height;
+         int channels = 4; // RGBA
+
+         // Save the image as a PNG
+         stbi_write_png(fileName, width, height, channels, mappedResource.pData, mappedResource.RowPitch);
+
+         // Unmap the staging texture
+         dx11Context->Unmap(stagingTexture, 0);
+
+         // Cleanup
+         stagingTexture->Release();
+         texture2D->Release();
+         wrappedResource->Release();
+         fence->Release();
+         
+         commandAllocator->Release();
+         dx11on12Device->Release();
+         dx11Context->Release();
+         dx11Device->Release();
+     }
+
 };
-
-

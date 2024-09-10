@@ -24,6 +24,8 @@ extern inline ID3D12GraphicsCommandList* d3d12CommandList = nullptr;
 extern inline ID3D12CommandQueue* d3d12CommandQueue = nullptr;
 extern inline ID3D12CommandAllocator* allocator = nullptr;
 
+extern inline ID3D11DeviceContext* dx11Context = nullptr;
+
 extern inline uint64_t buffersCounts = 0;
 extern inline std::vector<FrameContext> frameContexts = {};
 extern inline ID3D12Device5* d3d12Device5 = nullptr;

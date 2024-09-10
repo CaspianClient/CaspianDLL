@@ -16,4 +16,5 @@ public:
     ID3D12Device* Dx12Device;
     ID3D12GraphicsCommandList* CommandList;
     ID3D12CommandQueue* CommandQueue;
+    ID3D12CommandAllocator* allocator;
 };
