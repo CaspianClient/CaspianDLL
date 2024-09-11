@@ -38,6 +38,8 @@ public:
     };
 
     std::function<void(RenderEvent&)> renderEvent = [&](RenderEvent& event) {
+        RndrUtils.RoundedRectFilled(Vec2(), PositionComponent(1, 1), currentScreenColor);
+        currentScreenColor = Utils::LerpImColor(currentScreenColor, endScreenColor, Client::Delta * 0.05);
         if (!get<bool>("enabled") || !TakeSS)
             return;
 
@@ -166,6 +168,7 @@ public:
         }
 
         TakeSS = false;
+        currentScreenColor = ImColor(255, 255, 255, 255);
     };
 
 private:
@@ -179,4 +182,7 @@ private:
         oss << std::put_time(&localTime, "%Y-%m-%d %H-%M-%S") << ".png";
         return Utils::getClientFolder() + "\\Screenshots" + oss.str();
     }
+
+    ImColor currentScreenColor = ImColor(255, 255, 255, 0);
+    ImColor endScreenColor = ImColor(255, 255, 255, 0);
 };

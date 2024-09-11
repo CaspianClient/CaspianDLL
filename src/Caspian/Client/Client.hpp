@@ -66,6 +66,8 @@ public:
 
 			Delta = 60 / currentFrameRate;
 
+			Delta = min(Delta, 1);
+
 			WindowSize = Vec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
 
 			MouseClickLeft = false;
