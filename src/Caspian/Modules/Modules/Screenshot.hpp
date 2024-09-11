@@ -180,7 +180,7 @@ private:
 
         std::ostringstream oss;
         oss << std::put_time(&localTime, "%Y-%m-%d %H-%M-%S") << ".png";
-        return Utils::getClientFolder() + "\\Screenshots" + oss.str();
+        return Utils::getClientFolder() + "\\Screenshots\\" + oss.str();
     }
 
     ImColor currentScreenColor = ImColor(255, 255, 255, 0);
