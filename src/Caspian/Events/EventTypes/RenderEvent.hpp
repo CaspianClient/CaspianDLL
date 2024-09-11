@@ -2,6 +2,7 @@
 #include <dxgi.h>
 #include <d3d11.h>
 #include <d3d12.h>
+#include <d3d11on12.h>
 
 enum DeviceType{
     DX11,
@@ -17,4 +18,7 @@ public:
     ID3D12GraphicsCommandList* CommandList;
     ID3D12CommandQueue* CommandQueue;
     ID3D12CommandAllocator* allocator;
+    ID3D11On12Device* d3d11on12Device;
+    ID3D11Device* d3d11on12_11Device;
+    ID3D11DeviceContext* d3d11on12_11DeviceContext;
 };

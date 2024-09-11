@@ -8,11 +8,16 @@
 #include "../Render/Setup/Setup.hpp"
 #include "../Resources/ResourceManager.hpp"
 #include "../Client/Client.hpp"
+#include "../Utils/Utils.hpp"
 
 bool Init::disabled = false;
 
 void Init::Initialize()
 {
+	Utils::CreateFolder(Utils::getClientFolder() + "\\Screenshots");
+	Utils::CreateFolder(Utils::getClientFolder() + "\\Logs");
+	Utils::CreateFolder(Utils::getClientFolder() + "\\Configs");
+
 	Logger::SetupLogger();
 	SigManager::IntializeSigs();
 	ConfigMgr.loadConfig();

@@ -2,6 +2,7 @@
 #include <string>
 #include <Vectors.hpp>
 #include <Windows.h>
+#include <filesystem>
 #include "../Client/Client.hpp"
 
 class Utils {
@@ -139,6 +140,13 @@ public:
         };
 
         return NonAlphaNumericKeyMap[keycode];
+    }
+
+    static void CreateFolder(std::string FolderPath) {
+        if (!std::filesystem::exists(FolderPath)) {
+            //std::filesystem::path p(FolderPath);
+            std::filesystem::create_directories(FolderPath);
+        }
     }
 
 };

@@ -82,7 +82,12 @@ void SetupImGUI::InitImGUI() {
 			ppContext->Release();
 		}
 		else if (d3d12Device) {
-            
+
+			D3D11On12CreateDevice(d3d12Device, D3D11_CREATE_DEVICE_BGRA_SUPPORT, nullptr, 0,
+				reinterpret_cast<IUnknown**>(&d3d12CommandQueue), 1, 0, &d3d11on12_11Device, &d3d11on12_11DeviceContext, nullptr);
+
+			d3d11on12_11Device->QueryInterface(IID_PPV_ARGS(&d3d11on12Device));
+
 			ImGui_ImplWin32_Init(window);
 			ImGui_ImplDX12_Init(d3d12Device, buffersCounts,
 				DXGI_FORMAT_R8G8B8A8_UNORM, d3d12DescriptorHeapImGuiRender,
@@ -199,8 +204,6 @@ void SetupImGUI::RenderDX12(IDXGISwapChain3* ppSwapChain) {
 
 	InitImGUI();
 
-	incrementFence();
-
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -212,6 +215,9 @@ void SetupImGUI::RenderDX12(IDXGISwapChain3* ppSwapChain) {
     event->CommandList = d3d12CommandList;
     event->CommandQueue = d3d12CommandQueue;
     event->allocator = allocator;
+	event->d3d11on12Device = d3d11on12Device;
+	event->d3d11on12_11Device = d3d11on12_11Device;
+	event->d3d11on12_11DeviceContext = d3d11on12_11DeviceContext;
     EventDispatcher.trigger(event);
 
 	frameContexts[ppSwapChain->GetCurrentBackBufferIndex()].commandAllocator->Reset();;

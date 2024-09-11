@@ -8,7 +8,7 @@
 #include "../Utils/Utils.hpp"
 
 class Logger {
-    static inline std::string file = Utils::getClientFolder() + "\\log.txt";
+    static inline std::string file = Utils::getClientFolder() + "\\Logs\\log.txt";
 	static inline std::ofstream logFile = std::ofstream();
 
     static void log(const std::string& level, const std::string& message) {

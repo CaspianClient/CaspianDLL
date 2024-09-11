@@ -3,6 +3,8 @@
 #include <d3d11.h>
 #include <d3d12.h>
 #include <dxgi1_4.h>
+#include <dxgi1_6.h>
+#include <d3d11on12.h>
 #include <kiero.h>
 
 #include "../../Logger/Logger.hpp"
@@ -17,14 +19,15 @@ struct FrameContext {
 
 extern inline ID3D11Device* d3d11Device = nullptr;
 extern inline ID3D12Device* d3d12Device = nullptr;
+extern inline ID3D11On12Device* d3d11on12Device = nullptr;
+extern inline ID3D11Device* d3d11on12_11Device = nullptr;
+extern inline ID3D11DeviceContext* d3d11on12_11DeviceContext = nullptr;
 
 extern inline ID3D12DescriptorHeap* d3d12DescriptorHeapImGuiRender = nullptr;
 extern inline ID3D12DescriptorHeap* d3d12DescriptorHeapBackBuffers = nullptr;
 extern inline ID3D12GraphicsCommandList* d3d12CommandList = nullptr;
 extern inline ID3D12CommandQueue* d3d12CommandQueue = nullptr;
 extern inline ID3D12CommandAllocator* allocator = nullptr;
-
-extern inline ID3D11DeviceContext* dx11Context = nullptr;
 
 extern inline uint64_t buffersCounts = 0;
 extern inline std::vector<FrameContext> frameContexts = {};
@@ -34,7 +37,7 @@ extern inline ID3D12Fence* fence = nullptr;
 extern inline HANDLE fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
 extern inline bool ImGUIintialized = false;
-extern inline bool killed = false;
+extern inline bool killed = true;
 extern inline int fenceValue = 0;
 
 class SetupImGUI {
@@ -61,24 +64,5 @@ public:
 	static void RenderDX11(IDXGISwapChain3* ppSwapChain);
 
 	static void RenderDX12(IDXGISwapChain3* ppSwapChain);
-
-	static void createFenceEvent(){
-		fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-	}
-
-	static UINT64 incrementFence()
-	{
-        fenceValue++;
-		d3d12CommandQueue->Signal(fence, fenceValue); // CHECK HRESULT
-		return fenceValue;
-	}
-
-	static void waitFor()
-	{
-        if (fence->GetCompletedValue() < fenceValue) {
-            fence->SetEventOnCompletion(fenceValue, fenceEvent);
-            WaitForSingleObject(fenceEvent, INFINITE);
-        }
-	}
 
 };

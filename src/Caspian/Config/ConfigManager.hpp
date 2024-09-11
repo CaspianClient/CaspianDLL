@@ -52,7 +52,7 @@ public:
 }
 
 private:
-    std::string filename = Utils::getClientFolder() + "//Default.conf";
+    std::string filename = Utils::getClientFolder() + "\\Configs\\Default.conf";
     json config;
 };
 
