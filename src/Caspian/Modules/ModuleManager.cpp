@@ -15,6 +15,7 @@
 #include "Modules/EnvironmentChanger.hpp"
 #include "Modules/PingDisplay.hpp"
 #include "Modules/Screenshot.hpp"
+#include "Modules/MotionBlur.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -35,6 +36,7 @@ void ModuleManager::IntializeModules() {
     AddModule(new EnvironmentChanger());
     AddModule(new PingDisplay());
     AddModule(new Screenshot());
+	AddModule(new MotionBlur());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {
