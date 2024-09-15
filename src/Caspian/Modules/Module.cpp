@@ -15,7 +15,11 @@ void Module::RenderHud(const std::string text) {
 
 	handleDragging(pos, size);
 
-	RndrUtils.RoundedRectFilled(pos, size, RndrUtils.VecToImcolor(get<std::vector<float>>("BGcolor")), 0);
+	float SmallerSide = min(size.x, size.y);
+
+	float rounding = SmallerSide / 2 * get<float>("Rounding");
+
+	RndrUtils.RoundedRectFilled(pos, size, RndrUtils.VecToImcolor(get<std::vector<float>>("BGcolor")), rounding);
 	RndrUtils.Text(pos, size, RndrUtils.VecToImcolor(get<std::vector<float>>("TEXTcolor")), text, .35 * Size, 2);
 }
 

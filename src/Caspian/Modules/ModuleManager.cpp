@@ -36,7 +36,7 @@ void ModuleManager::IntializeModules() {
     AddModule(new EnvironmentChanger());
     AddModule(new PingDisplay());
     AddModule(new Screenshot());
-	AddModule(new MotionBlur());
+	//AddModule(new MotionBlur());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {

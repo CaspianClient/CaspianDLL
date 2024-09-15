@@ -13,6 +13,7 @@ public:
 		this->set("posX", 0, false);
 		this->set("posY", 0, false);
 		this->set("Size", 1, false);
+		this->set("Rounding", 0, false);
 		this->set("anim", 1, false);
 		this->set("BGcolorDisabled", std::vector<float>{0, 0, 0, .5f}, false);
 		this->set("TEXTcolorDisabled", std::vector<float>{1, 1, 1, 1}, false);
@@ -26,6 +27,7 @@ public:
 
 	void RenderSettings() override {
 		AddSlider("Size", "Size", 0.5, 2.5);
+		AddSlider("Rounding", "Rounding", 0, 1);
 		AddSlider("anim", "Animation Speed", 0, 3);
 		AddColorPicker("BGcolorDisabled", "Disabled Background Color");
 		AddColorPicker("TEXTcolorDisabled", "Disabled Text Color");
@@ -113,27 +115,28 @@ public:
 
 		Vec2 pos_SPACE = Vec2(pos.x, pos.y + ((ButtonSizes.y + Spacing.y) * 3));
 
-		
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_W), ButtonSizes, W.bgColor, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_A), ButtonSizes, A.bgColor, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_S), ButtonSizes, S.bgColor, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_D), ButtonSizes, D.bgColor, 10);
+		float Rounding = (ButtonSizes.y / 2) * get<float>("Rounding");
 
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes, pos_LC), MBsizes, LC.bgColor, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes, pos_RC), MBsizes, RC.bgColor, 10);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_W), ButtonSizes, W.bgColor, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_A), ButtonSizes, A.bgColor, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_S), ButtonSizes, S.bgColor, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes, pos_D), ButtonSizes, D.bgColor, Rounding);
 
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(SBsize, SBsize, pos_SPACE), SBsize, SPACE.bgColor, 10);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes, pos_LC), MBsizes, LC.bgColor, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes, pos_RC), MBsizes, RC.bgColor, Rounding);
+
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(SBsize, SBsize, pos_SPACE), SBsize, SPACE.bgColor, Rounding);
 
 
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * W.size, pos_W), ButtonSizes * W.size, EnabledBG, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * A.size, pos_A), ButtonSizes * A.size, EnabledBG, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * S.size, pos_S), ButtonSizes * S.size, EnabledBG, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * D.size, pos_D), ButtonSizes * D.size, EnabledBG, 10);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * W.size, pos_W), ButtonSizes * W.size, EnabledBG, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * A.size, pos_A), ButtonSizes * A.size, EnabledBG, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * S.size, pos_S), ButtonSizes * S.size, EnabledBG, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(ButtonSizes, ButtonSizes * D.size, pos_D), ButtonSizes * D.size, EnabledBG, Rounding);
 
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes * LC.size, pos_LC), MBsizes * LC.size, EnabledBG, 10);
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes * RC.size, pos_RC), MBsizes * RC.size, EnabledBG, 10);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes * LC.size, pos_LC), MBsizes * LC.size, EnabledBG, Rounding);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(MBsizes, MBsizes * RC.size, pos_RC), MBsizes * RC.size, EnabledBG, Rounding);
 
-		RndrUtils.RoundedRectFilled(Utils::CenterRect(SBsize, SBsize * SPACE.size, pos_SPACE), SBsize * SPACE.size, EnabledBG, 10);
+		RndrUtils.RoundedRectFilled(Utils::CenterRect(SBsize, SBsize * SPACE.size, pos_SPACE), SBsize * SPACE.size, EnabledBG, Rounding);
 
 
 
