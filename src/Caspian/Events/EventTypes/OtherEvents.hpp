@@ -27,3 +27,8 @@ class GetAveragePingEvent {
 public:
 	int ping;
 };
+
+class GameModeAttackEvent {
+public:
+	void* entity;
+};

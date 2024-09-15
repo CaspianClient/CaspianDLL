@@ -28,6 +28,7 @@ void SigManager::IntializeSigs() {
     AddSig("DimensionGetDayTime", "48 89 5C 24 18 57 48 83 EC 30 48 8B F9 0F 29 74 24 20 48 8B 89 C0 00 00 00");
 	AddSig("GetAveragePing", "48 81 EC C8 00 00 00 4C 8B D1 48 8D 4C 24 20 E8 ?? ?? ?? ?? 48 8B D0 45 33 C0 45 33 C9 49 8B CA E8 ?? ?? ?? ?? 4C 8B C0");
 	AddSig("OnAppSuspend", "48 89 5C 24 10 48 89 74 24 18 48 89 7C 24 20 55 48 8D 6C 24 A9 48 81 EC 90 00 00 00 48 8B F1 E8 ?? ?? ?? ?? 48 8B D8");
+	AddSig("GameModeAttack", "48 89 5C 24 10 48 89 74 24 18 55 57 41 56 48 8D 6C 24 90 48 81 EC 70 01 00 00 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 60 48 8B F2 48 8B F9 45 33 F6 4C 89 75 08 48 8D 4D 08 E8 ?? ?? ?? ?? 90 C6 45 00 01");
 	for (auto it = Sigs.begin(); it != Sigs.end(); ++it) {
 		ScannedSigs[it->first] = Memory::ScanSig(it->second);
 	}

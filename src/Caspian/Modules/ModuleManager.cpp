@@ -16,6 +16,7 @@
 #include "Modules/PingDisplay.hpp"
 #include "Modules/Screenshot.hpp"
 #include "Modules/MotionBlur.hpp"
+#include "Modules/ReachCounter.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -36,6 +37,7 @@ void ModuleManager::IntializeModules() {
     AddModule(new EnvironmentChanger());
     AddModule(new PingDisplay());
     AddModule(new Screenshot());
+	AddModule(new ReachCounter());
 	//AddModule(new MotionBlur());
 }
 

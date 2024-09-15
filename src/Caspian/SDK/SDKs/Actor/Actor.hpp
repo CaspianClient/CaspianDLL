@@ -5,6 +5,7 @@
 #include "Components/ActorRotationComponent.hpp"
 #include "Components/ActorHeadRotationComponent.hpp"
 #include "Components/StateVectorComponent.hpp"
+#include "../Level/Level.hpp"
 
 class EntityRegistry;
 
@@ -18,6 +19,9 @@ public:
 
 class Actor {
 public:
+
+	BUILD_ACCESS(this, Level*, level, 0x250);
+
 	template <typename Component>
 	Component* tryGet(uintptr_t addr) {
 		using efunc = Component * (__thiscall*)(void*, uintptr_t*);
