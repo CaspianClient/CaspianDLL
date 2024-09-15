@@ -37,7 +37,7 @@ extern inline ID3D12Fence* fence = nullptr;
 extern inline HANDLE fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
 extern inline bool ImGUIintialized = false;
-extern inline bool killed = true;
+extern inline bool killed = false;
 extern inline int fenceValue = 0;
 
 class SetupImGUI {

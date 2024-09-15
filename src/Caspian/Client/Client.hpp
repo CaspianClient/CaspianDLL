@@ -62,7 +62,7 @@ public:
 
 			std::chrono::duration<float> frameTime = currentTime - lastTime;
 			lastTime = currentTime;
-			float currentFrameRate = 1.0f / frameTime.count();
+			currentFrameRate = 1.0f / frameTime.count();
 
 			Delta = 60 / currentFrameRate;
 
@@ -111,6 +111,8 @@ public:
 	}
 
 	static inline float Delta = 0;
+
+	static inline float currentFrameRate = 0;
 
 	static inline Vec2 WindowSize = Vec2();
 	static inline Vec2 ScreenSize = Vec2();
