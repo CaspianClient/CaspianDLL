@@ -9,6 +9,7 @@
 #include "Hooks/GetPerspective.hpp"
 #include "Hooks/DimensionGetDayTime.hpp"
 #include "Hooks/GetAveragePing.hpp"
+#include "Hooks/OnAppSuspend.hpp"
 
 std::vector<Hook*> HookManager::Hooks = {};
 
@@ -24,4 +25,5 @@ void HookManager::InitializeHooks() {
 	Hooks.push_back(new GetPerspective());
     Hooks.push_back(new DimensionGetDayTime());
 	Hooks.push_back(new GetAveragePing());
+	Hooks.push_back(new OnAppSuspend());
 }
