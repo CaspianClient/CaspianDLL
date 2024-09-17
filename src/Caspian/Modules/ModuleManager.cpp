@@ -18,6 +18,7 @@
 #include "Modules/MotionBlur.hpp"
 #include "Modules/ReachCounter.hpp"
 #include "Modules/potionHUD.hpp"
+#include "Modules/MemoryDisplay.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -40,6 +41,7 @@ void ModuleManager::IntializeModules() {
     AddModule(new PingDisplay());
     AddModule(new Screenshot());
 	AddModule(new ReachCounter());
+	AddModule(new MemoryDisplay());
 	//AddModule(new MotionBlur());
 }
 
