@@ -7,7 +7,7 @@
 
 class Keystrokes : public Module {
 public:
-	Keystrokes() : Module("Keystokes", "Shows your Keystrokes")
+	Keystrokes() : Module("Keystrokes", "Shows your Keystrokes")
 	{
 		this->set("enabled", false, false);
 		this->set("posX", 0, false);
