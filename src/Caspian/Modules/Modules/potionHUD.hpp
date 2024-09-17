@@ -17,10 +17,15 @@ public:
 
 		this->set("enabled", false, false);
 		this->set("Size", 1, false);
+        this->set("useEffectColor", true, false);
+        this->set("TEXTcolor", std::vector<float>{1, 1, 1, 1}, false);
 
 	}
 	void RenderSettings() override {
 		AddSlider("Size", "Size", 0.5, 2.5);
+        AddToggle("useEffectColor", "Use Effect's Color");
+        if (!get<bool>("useEffectColor"))
+            AddColorPicker("TEXTcolor", "Text Color");
 	}
 
 	std::function<void(RenderEvent&)> renderEvent = [&](RenderEvent& event) {
@@ -40,10 +45,11 @@ public:
 
             Vec2 RenderPos = pos;
             RenderPos.y += heightIncrement;
+            ImColor col = get<bool>("useEffectColor") ? EffectColors[(int)effect.mId] : RndrUtils.VecToImcolor(get<std::vector<float>>("TEXTcolor"));
 
             std::string EffectText = Effects[(int)effect.mId] + " " + Amplifiers[effect.mAmplifier + 1] + ": " + std::to_string(Minutes) + ":" + std::to_string(Seconds);
 
-            RndrUtils.Text(RenderPos, SizeEachEffect, EffectColors[(int)effect.mId], EffectText, 0.35 * size, 1);
+            RndrUtils.Text(RenderPos, SizeEachEffect, col, EffectText, 0.35 * size, 1);
             
             heightIncrement += SizeEachEffect.y;
         }
