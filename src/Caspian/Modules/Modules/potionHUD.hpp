@@ -14,6 +14,7 @@ public:
 	potionHUD() : Module("Potion HUD", "Potion HUD")
 	{
 		EventDispatcher.listen<RenderEvent>(renderEvent);
+        EventDispatcher.listen<RenderMobEffectsUIEvent>(renderMobEffectsUIEvent);
 
 		this->set("enabled", false, false);
 		this->set("Size", 1, false);
@@ -55,6 +56,10 @@ public:
         }
 		
 	};
+
+    std::function<void(RenderMobEffectsUIEvent&)> renderMobEffectsUIEvent = [&](RenderMobEffectsUIEvent& event) {
+        event.mCancel = get<bool>("enabled");
+    };
 
 private:
     std::unordered_map<int, std::string> Effects = {

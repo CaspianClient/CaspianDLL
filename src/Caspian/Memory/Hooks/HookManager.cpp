@@ -11,6 +11,7 @@
 #include "Hooks/GetAveragePing.hpp"
 #include "Hooks/OnAppSuspend.hpp"
 #include "Hooks/GameModeAttack.hpp"
+#include "Hooks/RenderMobEffectsUI.hpp"
 
 std::vector<Hook*> HookManager::Hooks = {};
 
@@ -28,4 +29,5 @@ void HookManager::InitializeHooks() {
 	Hooks.push_back(new GetAveragePing());
 	Hooks.push_back(new OnAppSuspend());
 	Hooks.push_back(new GameModeAttack());
+	Hooks.push_back(new RenderMobEffectsUI());
 }

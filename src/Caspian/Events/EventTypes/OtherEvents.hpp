@@ -32,3 +32,8 @@ class GameModeAttackEvent {
 public:
 	void* entity;
 };
+
+class RenderMobEffectsUIEvent {
+public:
+	bool mCancel;
+};
