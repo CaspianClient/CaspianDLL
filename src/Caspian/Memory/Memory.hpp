@@ -60,4 +60,12 @@ public:
         uintptr_t **Table = reinterpret_cast<uintptr_t **>(vft + VFToffset + 7);
         return Table;
     }
+
+    template<typename T>
+    static void Release(T*& ptr) {
+        if (ptr != nullptr) {
+            ptr->Release();
+            ptr = nullptr;
+        }
+    }
 };

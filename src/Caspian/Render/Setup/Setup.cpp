@@ -19,7 +19,12 @@ void SetupImGUI::CommandList(ID3D12CommandQueue* queue, UINT numCommandLists, co
 void SetupImGUI::Present(IDXGISwapChain3* ppSwapChain, UINT syncInterval, UINT flags) {
 
 	if (!killed) {
-		ppSwapChain->GetDevice(IID_PPV_ARGS(&d3d12Device5));
+		HRESULT hr = ppSwapChain->GetDevice(IID_PPV_ARGS(&d3d12Device5));
+		if (FAILED(hr)) {
+			printf("Failed to remove D3D12Device.\n");
+			killed = true;
+			return Present_original(ppSwapChain, syncInterval, flags);
+		}
 		d3d12Device5->RemoveDevice();
 		killed = true;
 		return Present_original(ppSwapChain, syncInterval, flags);
@@ -278,4 +283,21 @@ void SetupImGUI::RenderDX12(IDXGISwapChain3* ppSwapChain) {
 void SetupImGUI::RenderFrame() {
 	nes::event_holder<RenderEvent> event;
 	EventDispatcher.trigger(event);
+}
+
+void SetupImGUI::Disable() {
+	Memory::Release(d3d11Device);
+	Memory::Release(d3d12Device);
+	Memory::Release(d3d11on12Device);
+	Memory::Release(d3d11on12_11Device);
+	Memory::Release(d3d11on12_11DeviceContext);
+	Memory::Release(d3d12DescriptorHeapImGuiRender);
+	Memory::Release(d3d12DescriptorHeapBackBuffers);
+	Memory::Release(d3d12CommandList);
+	//Memory::Release(d3d12CommandQueue);
+
+	for (auto x : frameContexts) {
+		Memory::Release(x.commandAllocator);
+		Memory::Release(x.main_render_target_resource);
+	}
 }

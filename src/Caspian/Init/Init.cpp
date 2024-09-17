@@ -43,6 +43,7 @@ void Init::Initialize()
 void Init::EjectClient()
 {
 	MH_DisableHook(MH_ALL_HOOKS);
+	SetupImGUI::Disable();
 	printf("Client Ejected\n");
 	disabled = true;
 }

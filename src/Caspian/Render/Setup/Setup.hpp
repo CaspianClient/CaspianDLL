@@ -65,4 +65,6 @@ public:
 
 	static void RenderDX12(IDXGISwapChain3* ppSwapChain);
 
+	static void Disable();
+
 };
