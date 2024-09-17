@@ -5,6 +5,7 @@
 #include "Components/ActorRotationComponent.hpp"
 #include "Components/ActorHeadRotationComponent.hpp"
 #include "Components/StateVectorComponent.hpp"
+#include "Components/MobEffectsComponent.hpp"
 #include "../Level/Level.hpp"
 
 class EntityRegistry;
@@ -81,5 +82,15 @@ public:
 
 		return tryGet<StateVectorComponent>(sig);
 
+	}
+
+	MobEffectsComponent* getMobEffectsComponent() {
+		static  uintptr_t sig;
+
+		if (sig == NULL) {
+			sig = getSig("MobEffectsComponent");
+		}
+
+		return tryGet<MobEffectsComponent>(sig);
 	}
 };

@@ -17,12 +17,14 @@
 #include "Modules/Screenshot.hpp"
 #include "Modules/MotionBlur.hpp"
 #include "Modules/ReachCounter.hpp"
+#include "Modules/potionHUD.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
 }
 
 void ModuleManager::IntializeModules() {
+	AddModule(new potionHUD());
 	AddModule(new Zoom());
 	AddModule(new FPS());
 	AddModule(new ModMenu());

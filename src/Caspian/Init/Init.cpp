@@ -9,6 +9,7 @@
 #include "../Resources/ResourceManager.hpp"
 #include "../Client/Client.hpp"
 #include "../Utils/Utils.hpp"
+#include "../SDK/SDK.hpp"
 
 bool Init::disabled = false;
 
@@ -34,7 +35,8 @@ void Init::Initialize()
 																				{
 		if (event.key == 46) {
 			EjectClient();
-		} });
+		}
+		});
 	return;
 }
 
