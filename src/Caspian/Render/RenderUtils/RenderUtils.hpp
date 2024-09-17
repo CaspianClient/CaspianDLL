@@ -74,7 +74,7 @@ public:
 
 //Rendering Other Things
 public:
-	void Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, std::string Font = "MinecraftFont");
+	void Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, bool shadow = false, std::string Font = "MinecraftFont");
 
 	void RenderImage(Vec2 Pos, Vec2 size, std::string image, ImColor imgColour);
 

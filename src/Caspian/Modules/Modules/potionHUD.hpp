@@ -49,7 +49,7 @@ public:
 
             std::string EffectText = Effects[(int)effect.mId] + " " + Amplifiers[effect.mAmplifier + 1] + ": " + std::to_string(Minutes) + ":" + std::to_string(Seconds);
 
-            RndrUtils.Text(RenderPos, SizeEachEffect, col, EffectText, 0.35 * size, 1);
+            RndrUtils.Text(RenderPos, SizeEachEffect, col, EffectText, 0.35 * size, 1, true);
             
             heightIncrement += SizeEachEffect.y;
         }

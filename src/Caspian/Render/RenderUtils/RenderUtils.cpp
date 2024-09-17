@@ -276,7 +276,7 @@ void RenderUtils::RectMultiColor(Vec2 Position, Vec2 Size, ImColor topLeft, ImCo
 }
 
 //Rendering Other Things
-void RenderUtils::Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, std::string Font) {
+void RenderUtils::Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, bool shadow, std::string Font) {
 
 	if (!FontSetup) {
 		SetupFonts();
@@ -306,6 +306,14 @@ void RenderUtils::Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::
 	}
 
 	Position.y += (PaddingSize.y / 2) - (ImGui::CalcTextSize(Text.c_str()).y / 2);
+
+	if (shadow) {
+		float shadowColorahfg = 0.55;
+		ImColor shadowCol = ImColor(TextColor.Value.x * shadowColorahfg, TextColor.Value.y * shadowColorahfg, TextColor.Value.z * shadowColorahfg, TextColor.Value.w * shadowColorahfg);
+		SizeComponent Offset = SizeComponent(0.0085, 0.0085) * FontSize;
+		getDrawList()->AddText(Position + Offset, shadowCol, Text.c_str());
+	}
+
 	getDrawList()->AddText(Position, TextColor, Text.c_str());
 	ImGui::PopFont();
 }
