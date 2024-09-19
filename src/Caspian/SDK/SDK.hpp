@@ -7,4 +7,5 @@ class SDK {
 public:
 	static ClientInstance* CI;
 	static std::string TopLayer;
+	static Packet* createPacket(int packet);
 };

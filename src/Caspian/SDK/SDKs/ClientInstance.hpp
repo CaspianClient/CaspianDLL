@@ -5,6 +5,9 @@
 
 class ClientInstance {
 public:
+
+	BUILD_ACCESS(this, LoopbackPacketSender*, packetSender, 0xF0);
+
 	LocalPlayer* getLocalPlayer() {
 		return Memory::Call_vft<29, LocalPlayer*>(this);
 	}

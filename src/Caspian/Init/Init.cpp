@@ -36,6 +36,25 @@ void Init::Initialize()
 		if (event.key == 46) {
 			EjectClient();
 		}
+
+		if (event.key == 0x24) {
+			auto *packet = SDK::createPacket(9);
+            TextPacket *textPacket = reinterpret_cast<TextPacket *>(packet);
+
+            textPacket->type = TextPacketType::CHAT;
+			textPacket->message = "win_message";
+            textPacket->platformId = "";
+            textPacket->translationNeeded = false;
+            textPacket->xuid = "";
+            textPacket->name = "ANSHUL MASTER";
+
+			printf("Packer\n");
+
+            SDK::CI->getpacketSender()->sendToServer(textPacket);
+
+			printf("Packer Sent\n");
+
+		}
 		});
 	return;
 }
