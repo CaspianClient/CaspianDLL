@@ -15,17 +15,15 @@ enum class TextPacketType {
     JSON_ANNOUNCEMENT = 11
 };
 
-class TextPacket : public Packet {
+class TextPacket : public ::Packet {
 public:
-    TextPacketType type;  // 0x28
-
-    std::string name;           // 0x30
-    std::string message;              // 0x50
-    std::vector<std::string> mParams;   // 0x70
-    bool translationNeeded = false;  // 0x88
-
-    std::string xuid;
-    std::string platformId;
-
-    TextPacket() = default;
+    TextPacketType           mType;            // this+0x30
+    std::string              mAuthor;          // this+0x38
+    std::string              mMessage;         // this+0x58
+    std::string              mFilteredMessage; // this+0x78
+    bool                     mUnknown;         // this+0x98
+    std::vector<std::string> mParams;          // this+0xA0
+    bool                     mLocalize;        // this+0x88
+    std::string              mXuid;            // this+0xC0
+    std::string              mPlatformId;      // this+0xE0
 };
