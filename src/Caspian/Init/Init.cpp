@@ -31,6 +31,10 @@ void Init::Initialize()
 
 	Logger::info("Injection Completed");
 
+	Sleep(1000);
+
+	Client::PushNotification("Caspian Injected! Press " +  Utils::GetKeyFromCode(ConfigMgr.get<int>("Mod Menu", "keybind"), true) + (std::string)" to open Mod Menu");
+
 	EventDispatcher.listen<KeyboardEvent>([&](KeyboardEvent &event)
 																				{
 		if (event.key == 46) {

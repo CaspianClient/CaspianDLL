@@ -4,6 +4,21 @@
 #include <functional>
 #include <Vectors.hpp>
 #include "../Events/Event.hpp"
+#include "../Render/RenderUtils/RenderUtils.hpp"
+
+class Notif {
+public:
+
+	std::string text;
+	std::chrono::time_point<std::chrono::high_resolution_clock> time;
+	Vec2 pos;
+
+	Notif(std::string tex) {
+		text = tex;
+		time = std::chrono::high_resolution_clock::now();
+		pos = PositionComponent(1, 1);
+	}
+};
 
 class Client {
 	static inline std::vector<std::chrono::time_point<std::chrono::high_resolution_clock>> LeftCPS = {};
@@ -12,6 +27,44 @@ class Client {
 	static inline std::chrono::time_point<std::chrono::high_resolution_clock> lastTime = std::chrono::high_resolution_clock::now();
 	static inline std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
 	static inline int frameCount = 0;
+
+	static inline std::vector<Notif*> Notifications = {};
+
+	static float lerp(float& current, float endValue, float delta) {
+		current = current + (endValue - current) * delta;
+		return current;
+	}
+
+	static void RenderNotifications() {
+		int count = 0;
+		Vec2 Size = SizeComponent(0.5, 0.1);
+		float Spacing = Size.y * 0.2;
+		Vec2 PosNotif = PositionComponent(1, 1);
+		PosNotif.x -= Size.x;
+		PosNotif.y -= Size.y * 2;
+		for (auto Notif : Notifications) {
+
+			auto currentTime = std::chrono::high_resolution_clock::now();
+			auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - Notif->time).count();
+
+			if (Notif->pos.x > PositionComponent(1, 0).x) return;
+
+			if (elapsedTime > 5)
+				Notif->pos.x = lerp(Notif->pos.x, PositionComponent(1.1, 0).x, Delta * 0.3);
+			else
+				Notif->pos.x = lerp(Notif->pos.x, PosNotif.x, Delta * 0.3);
+
+			Notif->pos.y = lerp(Notif->pos.y, PosNotif.y, Delta * 0.3);
+
+			RndrUtils.RoundedRectFilled(Notif->pos, Size, ImColor(0.0f, 0.0f, 0.0f, 0.5f), 0);
+
+			Vec2 PosText = Vec2(Notif->pos.x + Spacing, Notif->pos.y);
+			RndrUtils.Text(PosText, Size / 2, IM_COL32_WHITE, "Notification", 0.45, 1);
+			RndrUtils.Text(PosText + Vec2(0, Size.y/2), Size / 2, IM_COL32_WHITE, Notif->text, 0.25, 1);
+
+			PosNotif.y -= Size.y + Spacing;
+		}
+	}
 public:
 	static void InitClientInfo() {
 		EventDispatcher.listen<MouseEvent, nes::event_priority::FIRST>([&](MouseEvent& event) { 
@@ -75,6 +128,7 @@ public:
 			ScrollUP = false;
 			ScrollDOWN = false;
 			KeyThisFrame = 0;
+			RenderNotifications();
 			});
 
 		EventDispatcher.listen<KeyboardEvent, nes::event_priority::FIRST>([&](KeyboardEvent& event) {
@@ -131,4 +185,8 @@ public:
 	static inline int KeyThisFrame = 0;
 
 	static inline std::map<int, bool> keypressed = {};
+
+	static void PushNotification(std::string text) {
+		Notifications.push_back(new Notif(text));
+	}
 };
