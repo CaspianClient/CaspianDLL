@@ -22,6 +22,8 @@ public:
 		return this->name;
 	}
 
+	bool CanRenderHud();
+
 	bool AnyActiveKeybind() {
 		for (auto key : Activekeybinds) {
 			if (key.second) return true;

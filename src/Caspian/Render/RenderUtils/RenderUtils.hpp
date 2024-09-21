@@ -72,6 +72,8 @@ public:
 
 	void TriangleFilled(Vec2 Vertex1, Vec2 Vertex2, Vec2 Vertex3, ImU32 color);
 
+	void Line(Vec2 Point1, Vec2 Point2, ImColor color, float thickness);
+
 //Rendering Other Things
 public:
 	void Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, bool shadow = false, std::string Font = "MinecraftFont");

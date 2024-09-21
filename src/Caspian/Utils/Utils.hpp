@@ -149,4 +149,21 @@ public:
         }
     }
 
+    static std::string StripColorCode(std::string input) {
+        std::string result;
+        result.reserve(input.size());  // Reserve space to avoid multiple allocations
+
+        for (size_t i = 0; i < input.size(); ++i) {
+            if (input[i] == '\xC2' && i + 1 < input.size() && input[i + 1] == '\xA7') { // § in UTF-8
+                // Skip the '§' and the next character
+                i += 2; // Move past the UTF-8 encoding and the character
+            }
+            else {
+                result += input[i];
+            }
+        }
+
+        return result;
+    }
+
 };

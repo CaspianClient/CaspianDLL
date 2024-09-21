@@ -3,8 +3,15 @@
 #include "../SDK/SDK.hpp"
 #include "ModuleManager.hpp"
 
+bool Module::CanRenderHud() {
+	if (!this->get<bool>("enabled") or SDK::TopLayer != "hud_screen" or !ModuleMgr.RenderHUDmods) {
+		return false;
+	}
+	return true;
+}
+
 void Module::RenderHud(const std::string text) {
-	if (!this->get<bool>("enabled") or SDK::TopLayer != "hud_screen") {
+	if (!CanRenderHud()) {
 		return;
 	}
 	PositionComponent pos = PositionComponent(this->get<float>("posX"), this->get<float>("posY"));

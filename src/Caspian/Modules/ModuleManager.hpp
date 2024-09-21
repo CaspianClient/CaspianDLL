@@ -9,6 +9,7 @@ public:
 	void IntializeModules();
 	void AddModule(Module* mod);
 	std::map<std::string, Module*> GetModuleList();
+	bool RenderHUDmods = true;
 };
 
 extern ModuleManager ModuleMgr;

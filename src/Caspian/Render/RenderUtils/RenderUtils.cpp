@@ -275,6 +275,10 @@ void RenderUtils::RectMultiColor(Vec2 Position, Vec2 Size, ImColor topLeft, ImCo
 	getDrawList()->AddRectFilledMultiColor(Position, Position + Size, topLeft, topRight, bottomRight, bottomLeft);
 }
 
+void RenderUtils::Line(Vec2 Point1, Vec2 Point2, ImColor color, float thickness) {
+	getDrawList()->AddLine(Point1, Point2, color, thickness);
+}
+
 //Rendering Other Things
 void RenderUtils::Text(Vec2 Position, Vec2 PaddingSize, ImColor TextColor, std::string Text, float FontSize, int Alignment, bool shadow, std::string Font) {
 

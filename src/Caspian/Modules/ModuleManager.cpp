@@ -19,6 +19,7 @@
 #include "Modules/ReachCounter.hpp"
 #include "Modules/potionHUD.hpp"
 #include "Modules/MemoryDisplay.hpp"
+#include "Modules/Tablist.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -42,6 +43,7 @@ void ModuleManager::IntializeModules() {
     AddModule(new Screenshot());
 	AddModule(new ReachCounter());
 	AddModule(new MemoryDisplay());
+	AddModule(new Tablist());
 	//AddModule(new MotionBlur());
 }
 
