@@ -27,6 +27,7 @@ void ModuleManager::AddModule(Module* mod) {
 }
 
 void ModuleManager::IntializeModules() {
+	//AddModule(new MotionBlur());
 	AddModule(new potionHUD());
 	AddModule(new Zoom());
 	AddModule(new FPS());
@@ -46,7 +47,6 @@ void ModuleManager::IntializeModules() {
 	AddModule(new MemoryDisplay());
 	AddModule(new Tablist());
 	AddModule(new HurtColor());
-	//AddModule(new MotionBlur());
 }
 
 std::map<std::string, Module*> ModuleManager::GetModuleList() {
