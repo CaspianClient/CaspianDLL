@@ -32,6 +32,7 @@ void SigManager::IntializeSigs() {
 	AddSig("MobEffectsComponent", "48 89 5C 24 08 57 48 83 EC 30 48 8B DA BA 2F B4 D6 F7"); // f7d6b42f
 	AddSig("HudMobEffectsRenderer_render", "48 89 5C 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 E0 EE FF FF");
 	AddSig("CreatePacket", "40 53 48 83 EC ? 45 33 C0 48 8B D9 81 FA");
+	AddSig("GetOverlayColor", "40 53 55 56 41 56 48 83 EC 68 0F 29 74 24 50");
 	for (auto it = Sigs.begin(); it != Sigs.end(); ++it) {
 		ScannedSigs[it->first] = Memory::ScanSig(it->second);
 	}

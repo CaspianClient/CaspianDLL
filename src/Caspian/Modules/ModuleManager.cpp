@@ -20,6 +20,7 @@
 #include "Modules/potionHUD.hpp"
 #include "Modules/MemoryDisplay.hpp"
 #include "Modules/Tablist.hpp"
+#include "Modules/HurtColor.hpp"
 
 void ModuleManager::AddModule(Module* mod) {
 	Modules[mod->getName()] = mod;
@@ -44,6 +45,7 @@ void ModuleManager::IntializeModules() {
 	AddModule(new ReachCounter());
 	AddModule(new MemoryDisplay());
 	AddModule(new Tablist());
+	AddModule(new HurtColor());
 	//AddModule(new MotionBlur());
 }
 

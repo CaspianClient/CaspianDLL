@@ -12,6 +12,7 @@
 #include "Hooks/OnAppSuspend.hpp"
 #include "Hooks/GameModeAttack.hpp"
 #include "Hooks/RenderMobEffectsUI.hpp"
+#include "Hooks/GetOverlayColor.hpp"
 
 std::vector<Hook*> HookManager::Hooks = {};
 
@@ -30,4 +31,5 @@ void HookManager::InitializeHooks() {
 	Hooks.push_back(new OnAppSuspend());
 	Hooks.push_back(new GameModeAttack());
 	Hooks.push_back(new RenderMobEffectsUI());
+	Hooks.push_back(new GetOverlayColor());
 }

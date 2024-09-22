@@ -1,4 +1,5 @@
 #pragma once
+#include "../../SDK/SDKs/mce/mce.hpp"
 
 class GetFOVevent {
 public:
@@ -36,4 +37,9 @@ public:
 class RenderMobEffectsUIEvent {
 public:
 	bool mCancel;
+};
+
+class GetOverlayEvent {
+public:
+	mce::Color color;
 };
